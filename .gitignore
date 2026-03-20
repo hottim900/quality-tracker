@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code agent memory (auto-generated, project-specific)
+.claude/agent-memory/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
