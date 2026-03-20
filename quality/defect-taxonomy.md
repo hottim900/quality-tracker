@@ -76,7 +76,7 @@ grep -rn "console\." . --include="*.ts" --include="*.tsx" | grep -v node_modules
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -106,7 +106,7 @@ grep -rn "z\.array\|Joi\.array" . --include="*.ts" | grep -v "max\|min"
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -139,7 +139,7 @@ grep -rn "Content-Security-Policy" . --include="*.ts"
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -166,7 +166,7 @@ grep -rn "@ts-ignore\|@ts-expect-error" . --include="*.ts" --include="*.tsx"
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -196,7 +196,7 @@ grep -rn "for.*await\|\.map.*await\|forEach.*await" . --include="*.ts" -A 3
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -223,7 +223,7 @@ grep -rn "\.findMany\|\.all(" . --include="*.ts" | grep -v "limit\|take\|LIMIT"
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 
 ---
 
@@ -267,7 +267,7 @@ grep -rn "pattern" . --include="\*.ts"
 
 ### 搜查結果
 
-（搜查後依三層格式填寫）
+（依[三層格式](#搜查結果記錄格式)填寫）
 ```
 
 ### 常見擴充方向
