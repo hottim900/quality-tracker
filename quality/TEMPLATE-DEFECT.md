@@ -86,6 +86,7 @@
 - [ ] 若本項在 README.md Critical/High 表中 → 移除該行
 - [ ] 更新 README.md 統計概覽（活躍項目數、Critical/High 計數）
 - [ ] 若「相依」有 Complements/Blocks 項目 → 檢查對方檔案是否需更新
+- [ ] 搜查手冊 [defect-taxonomy.md](../defect-taxonomy.md) 的對應類別「已知實例」加入本項連結
 
 ## 完成紀錄
 
