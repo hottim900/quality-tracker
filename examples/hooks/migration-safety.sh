@@ -7,7 +7,17 @@
 #
 # 使用方式：
 # 1. 將此檔案複製到你的 .claude/hooks/ 目錄
-# 2. 在 .claude/settings.json 中設定 PostToolUse hook
+# 2. 在 .claude/settings.json 中設定 PostToolUse hook：
+#    {
+#      "hooks": {
+#        "PostToolUse": [
+#          {
+#            "matcher": "Edit|Write",
+#            "command": "bash .claude/hooks/migration-safety.sh"
+#          }
+#        ]
+#      }
+#    }
 # 3. 根據你的專案需求修改檢查規則
 #
 # 你需要根據自己的技術棧重寫檢查邏輯。

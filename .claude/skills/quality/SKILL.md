@@ -18,23 +18,9 @@ QUALITY_DIR=/path/to/your/quality
 > 使用絕對路徑確保任何 session 都能正確存取。
 >
 > **範例：**
+>
 > - Companion repo 模式：`QUALITY_DIR=/home/user/my-project-quality/quality`
 > - Collocated 模式：`QUALITY_DIR=/home/user/my-project/quality`
-
-## 路徑解析
-
-操作品質檔案時，**一律使用 QUALITY_DIR 的絕對路徑**。
-
-| 檔案 | 路徑 |
-|------|------|
-| Dashboard | `${QUALITY_DIR}/README.md` |
-| 搜查手冊 | `${QUALITY_DIR}/defect-taxonomy.md` |
-| 設計筆記 | `${QUALITY_DIR}/quality-system-design-notes.md` |
-| Defect 模板 | `${QUALITY_DIR}/TEMPLATE-DEFECT.md` |
-| Tech Debt 模板 | `${QUALITY_DIR}/TEMPLATE-TECH-DEBT.md` |
-| Feature Gap 模板 | `${QUALITY_DIR}/TEMPLATE-FEATURE-GAP.md` |
-
----
 
 ## 快速操作
 
@@ -60,6 +46,7 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/
 依照 [README.md 建立新項目](${QUALITY_DIR}/README.md#建立新項目) 的完整步驟操作。
 
 簡要流程：
+
 1. 判斷類型（[決策樹](${QUALITY_DIR}/README.md#如何判斷分類)）
 2. 決定 ID → `ls` 對應目錄找最大編號 +1
 3. 複製模板 → 填寫 metadata
@@ -75,6 +62,7 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/
 ## 搜查手冊
 
 系統性搜查工具，定義已知缺陷類別。每個類別有：
+
 - **定義**：什麼模式構成此類缺陷
 - **搜查方式**：可執行的 grep/搜查指令
 - **判定標準**：如何判斷是否為缺陷

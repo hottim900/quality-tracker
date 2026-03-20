@@ -2,19 +2,19 @@
 
 > **For Claude:** 這是品質管理追蹤項目。依序執行各 Phase，每完成一項勾選驗收標準。完成後更新狀態並填寫完成紀錄。
 
-| 欄位           | 值                                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------ |
-| **ID**         | DEF-NNN                                                                                                      |
-| **類型**       | Defect                                                                                                       |
-| **狀態**       | Pending / In Progress / Blocked-by-Decision / Done                                                           |
-| **優先級**     | Critical / High / Medium / Low                                                                               |
-| **嚴重度**     | S1-Critical / S2-Major / S3-Minor / S4-Trivial                                                               |
-| **成本**       | S / M / L / XL                                                                                               |
-| **根因類別**   | Design Defect / Implementation Error / Configuration Omission / Framework Limitation / Missing Test Coverage |
-| **逃逸階段**   | Code Review / Unit Test / Integration Test / E2E Test / Production                                           |
-| **缺陷子類別** | [D-XXX](../defect-taxonomy.md#對應段落錨點)（對應 defect-taxonomy.md）                                       |
-| **相依**       | — / Complements: DEF-xxx / Blocks: DEF-xxx / Blocked-by: DEF-xxx                                             |
-| **關聯**       | 相關程式碼、Issue、文件連結                                                                                  |
+| 欄位           | 值                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **ID**         | DEF-NNN                                                                                                            |
+| **類型**       | Defect                                                                                                             |
+| **狀態**       | Pending / In Progress / Blocked-by-Decision / Done                                                                 |
+| **優先級**     | Critical / High / Medium / Low                                                                                     |
+| **嚴重度**     | S1-Critical / S2-Major / S3-Minor / S4-Trivial                                                                     |
+| **成本**       | S / M / L / XL                                                                                                     |
+| **根因類別**   | Design Defect / Implementation Error / Configuration Omission / Framework Limitation / Missing Test Coverage       |
+| **逃逸階段**   | Code Review / Unit Test / Integration Test / E2E Test / Production                                                 |
+| **缺陷子類別** | [D-XXX](../defect-taxonomy.md#d-xxx-類別名稱)（例：[D-SILENT](../defect-taxonomy.md#d-silent-靜默失敗與錯誤吞沒)） |
+| **相依**       | — / Complements: DEF-xxx / Blocks: DEF-xxx / Blocked-by: DEF-xxx                                                   |
+| **關聯**       | 相關程式碼、Issue、文件連結                                                                                        |
 
 ---
 
