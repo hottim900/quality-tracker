@@ -8,7 +8,6 @@
 | **類型**         | Tech Debt                                                     |
 | **狀態**         | Pending / In Progress / Blocked-by-Decision / Done            |
 | **優先級**       | Critical / High / Medium / Low                                |
-| **嚴重度**       | S1-Critical / S2-Major / S3-Minor / S4-Trivial                |
 | **成本**         | S / M / L / XL                                                |
 | **妥協原因**     | 為什麼做出這個妥協？（時間壓力 / 優先級取捨 / 知識不足）      |
 | **預計解決時機** | 何時計畫修復？（下個 Sprint / Phase X 完成後 / 無明確時程）   |

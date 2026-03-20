@@ -149,7 +149,7 @@ quality/
 
 ## 來自 Sparkle
 
-本系統在 [Sparkle](https://github.com/user/sparkle) 個人知識管理專案中經過實戰驗證：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。[`examples/sparkle/`](./examples/sparkle/) 包含 Sparkle 的完整搜查手冊（12 個類別 + 搜查結果），展示真實專案的使用方式。
+本系統在 Sparkle 個人知識管理專案中經過實戰驗證：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。[`examples/sparkle/`](./examples/sparkle/) 包含 Sparkle 的完整搜查手冊（12 個類別 + 搜查結果），展示真實專案的使用方式。
 
 ## 授權
 
