@@ -29,8 +29,8 @@
 #
 # Sparkle 原始用途 — 檢查 server/db/index.ts 的 migration 安全性：
 # 1. Block SELECT * FROM items (column order mismatch risk)
-# 2. Warn if DROP TABLE items without foreign_keys = OFF
-# 3. Warn if setSchemaVersion inside transaction block
+# 2. Block if DROP TABLE items without foreign_keys = OFF
+# 3. Block if setSchemaVersion inside transaction block
 
 if ! command -v jq &>/dev/null; then
   echo "❌ migration-safety.sh 需要 jq，但未安裝" >&2

@@ -34,10 +34,10 @@ INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
 # Only check quality item files (handle both absolute and relative paths)
-[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/DEF-*.md ]] || \
-[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TD-*.md ]] || \
-[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/FG-*.md ]] || \
-[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
+[[ "$FILE_PATH" == "$QUALITY_DIR"/*/DEF-*.md || "$FILE_PATH" == */"$QUALITY_DIR"/*/DEF-*.md ]] || \
+[[ "$FILE_PATH" == "$QUALITY_DIR"/*/TD-*.md || "$FILE_PATH" == */"$QUALITY_DIR"/*/TD-*.md ]] || \
+[[ "$FILE_PATH" == "$QUALITY_DIR"/*/FG-*.md || "$FILE_PATH" == */"$QUALITY_DIR"/*/FG-*.md ]] || \
+[[ "$FILE_PATH" == "$QUALITY_DIR"/*/TI-*.md || "$FILE_PATH" == */"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
 
 # Skip if file doesn't exist (deleted)
 [ -f "$FILE_PATH" ] || exit 0

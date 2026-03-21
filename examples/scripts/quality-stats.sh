@@ -43,7 +43,7 @@ for CAT in "${CATEGORIES[@]}"; do
   for STATUS in "${STATUSES[@]}"; do
     COUNT=0
     if [ -d "$CAT_DIR" ]; then
-      COUNT=$(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null | xargs grep -l "狀態.*$STATUS" 2>&1 | grep -v '/archive/' | grep -v 'No such file' | wc -l)
+      COUNT=$(find "$CAT_DIR" -maxdepth 1 -name "*.md" -exec grep -l "狀態.*$STATUS" {} + 2>/dev/null | grep -v '/archive/' | wc -l)
     fi
     COUNTS+=("$COUNT")
     TOTAL=$((TOTAL + COUNT))
