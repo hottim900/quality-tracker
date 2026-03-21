@@ -10,7 +10,7 @@
 
 AI 輔助開發常見的品質問題：
 
-- **改完原始碼忘更新追蹤** — AI 修完 bug 但忘記更新 Dashboard、統計數字、相依項目
+- **改完原始碼忘更新追蹤** — AI 修完 bug 但忘記更新追蹤項目狀態、檢查相依項目
 - **同類 bug 反覆出現** — 修了一個 bare catch，但不知道同類問題還有 12 處
 - **缺乏系統性搜查** — 靠肉眼或記憶找 bug，而非可重複執行的搜查指令
 
@@ -64,7 +64,7 @@ QUALITY_DIR=/你的品質系統絕對路徑/quality
 
 ```
 quality/
-├── README.md                      ← Dashboard：統計、Critical/High 表、分類定義
+├── README.md                      ← Dashboard：分類定義、查詢指引、工作流
 ├── defect-taxonomy.md             ← 搜查手冊：6 個缺陷類別 + 擴充指引
 ├── quality-system-design-notes.md ← 方法論：設計原則、取捨、AI 效率優化
 ├── TEMPLATE-DEFECT.md             ← Defect 項目模板
@@ -79,7 +79,7 @@ quality/
 
 | 組件          | 說明                                                                         |
 | ------------- | ---------------------------------------------------------------------------- |
-| **Dashboard** | 統計概覽 + Critical/High 表。只列高優先級項目，其餘用 `glob` 發現。          |
+| **Dashboard** | 分類定義、查詢指引、工作流。所有狀態由 item 檔案衍生，透過查詢取得。        |
 | **模板**      | 四種獨立模板（Defect / Tech Debt / Feature Gap / Test Infrastructure），每種有專屬 metadata 欄位。 |
 | **搜查手冊**  | 6 個內建缺陷類別，各附可執行的 grep 搜查指令。可自行擴充。                   |
 | **Skill**     | Claude Code 的操作指南，讓 AI 知道如何操作整個系統。                         |
@@ -103,13 +103,13 @@ quality/
         └─ 其他？ → Feature Gap
     │
     ▼
-建立項目（複製模板 → 填 metadata → 更新 Dashboard）
+建立項目（複製模板 → 填 metadata）
     │
     ▼
 修復
     │
     ▼
-完成 Checklist（狀態→Done、完成紀錄、更新 Dashboard、更新搜查手冊）
+完成 Checklist（狀態→Done、完成紀錄、檢查相依）
 ```
 
 ---
@@ -145,7 +145,14 @@ quality/
 
 ### Hook 整合
 
-用 Claude Code 的 PostToolUse hook 自動化品質防線。範例見 [`examples/hooks/`](./examples/hooks/)。
+用 Claude Code 的 PostToolUse hook 自動化品質防線。範例見 [`examples/hooks/`](./examples/hooks/)：
+
+- **migration-safety.sh** — Migration 程式碼安全檢查（阻擋危險操作）
+- **quality-item-consistency.sh** — Done 項目的 checklist 一致性檢查（阻擋未完成）
+
+### 統計腳本
+
+`bash examples/scripts/quality-stats.sh [quality-dir]` — 輸出各類別/優先級/狀態的統計報告。
 
 ### 方法論
 
