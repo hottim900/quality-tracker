@@ -131,6 +131,21 @@
 
 定義所有已知缺陷類別和可重複執行的搜查模式：**[defect-taxonomy.md](./defect-taxonomy.md)**
 
+### 搜查進度
+
+> 此表追蹤 [defect-taxonomy.md](./defect-taxonomy.md) 中各缺陷搜查類別的進度（不含 Tech Debt / Feature Gap 等其他分類）。
+> 詳細的搜查指令、判定標準與完整結果記錄在 taxonomy 檔案中 — **taxonomy 為 source of truth**，此表為快速總覽。
+> 更新搜查結果時，兩處需同步更新。
+
+| 缺陷類別 | 搜查狀態 | 結果摘要 |
+| -------- | -------- | -------- |
+| D-SILENT — 靜默失敗與錯誤吞沒 | 待搜查 | |
+| D-VALID — 輸入驗證缺口 | 待搜查 | |
+| D-AUTH — 認證、授權與安全防線 | 待搜查 | |
+| D-TYPE — 型別安全漏洞 | 待搜查 | |
+| D-PERF — 效能問題 | 待搜查 | |
+| D-EDGE — 邊界條件與資源限制 | 待搜查 | |
+
 ---
 
 ## 待追蹤發現
