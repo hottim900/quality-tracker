@@ -47,10 +47,24 @@ if [ "$PLATFORM" = "gitlab" ] && ! command -v glab &>/dev/null; then
   exit 1
 fi
 
+if [ "$PLATFORM" = "github" ] && ! gh auth status &>/dev/null; then
+  echo "❌ gh CLI 未認證。請先執行 gh auth login" >&2
+  exit 1
+fi
+
+if [ "$PLATFORM" = "gitlab" ] && ! glab auth status &>/dev/null; then
+  echo "❌ glab CLI 未認證。請先執行 glab auth login" >&2
+  exit 1
+fi
+
 # --- jq 共用定義 ---
 
-# is_open: 統一 GitHub (open) 和 GitLab (opened/OPEN) 的狀態判斷
-JQ_DEFS='def is_open: .state == "open" or .state == "OPEN" or .state == "opened"; def is_closed: .state == "closed" or .state == "CLOSED"; def has_label($l): .labels | map(.name) | any(. == $l);'
+# is_open: 統一 GitHub (open) 和 GitLab (opened) 的狀態判斷。含 OPEN/CLOSED 大寫形式以相容 GraphQL API。
+JQ_DEFS='
+  def is_open: .state == "open" or .state == "OPEN" or .state == "opened";
+  def is_closed: .state == "closed" or .state == "CLOSED";
+  def has_label($l): .labels | map(.name) | any(. == $l);
+'
 
 # --- 查詢 Issues ---
 
@@ -61,6 +75,7 @@ fetch_issues() {
     gh issue list --state all --limit "$QUERY_LIMIT" --json number,title,state,labels \
       | jq '[.[] | select(.labels | map(.name) | any(startswith("type:")))]'
   else
+    # glab 回傳 labels 為字串陣列（非物件），需轉為 {name: "..."} 統一格式
     glab issue list --all --per-page "$QUERY_LIMIT" --output json \
       | jq '[.[] | {number: .iid, title: .title, state: .state, labels: [(.labels // [])[] | {name: .}]}]'
   fi
@@ -71,7 +86,10 @@ echo "產生時間：$(date '+%Y-%m-%d %H:%M:%S')"
 echo "平台：$PLATFORM"
 echo ""
 
-ISSUES=$(fetch_issues)
+if ! ISSUES=$(fetch_issues); then
+  echo "❌ Issues 查詢失敗。請確認網路連線和 CLI 認證狀態。" >&2
+  exit 1
+fi
 
 ISSUE_COUNT=$(echo "$ISSUES" | jq 'length')
 if [ "$ISSUE_COUNT" -ge "$QUERY_LIMIT" ]; then
@@ -117,11 +135,15 @@ echo ""
 
 # --- 優先級統計（活躍項目）---
 
+PRIORITIES=("critical" "high" "medium" "low")
+PRIORITY_NAMES=("Critical:" "High:" "Medium:" "Low:")
+
 echo "=== 優先級統計（活躍項目）==="
-for PRIORITY in "critical" "high" "medium" "low"; do
+for i in "${!PRIORITIES[@]}"; do
+  PRIORITY="${PRIORITIES[$i]}"
+  DISPLAY_NAME="${PRIORITY_NAMES[$i]}"
   COUNT=$(echo "$ISSUES" | jq --arg p "priority:$PRIORITY" "$JQ_DEFS"'
     [.[] | select(is_open and has_label($p))] | length')
-  DISPLAY_NAME="$(echo "$PRIORITY" | awk '{print toupper(substr($0,1,1)) substr($0,2)}'):"
   printf "%-10s %d\n" "$DISPLAY_NAME" "$COUNT"
 done
 echo ""

@@ -49,15 +49,32 @@ echo "   ✅ 模板已複製到 .github/"
 
 echo "🏷️  建立品質追蹤 labels ..."
 
-CREATED=0
+LABELS_FILE="$SCRIPT_DIR/labels.json"
+if [ ! -f "$LABELS_FILE" ]; then
+  echo "❌ labels.json 不存在：$LABELS_FILE" >&2
+  exit 1
+fi
+if ! jq empty "$LABELS_FILE" 2>/dev/null; then
+  echo "❌ labels.json 格式錯誤，無法解析" >&2
+  exit 1
+fi
+
+PROCESSED=0
+FAILED=0
 
 while IFS=$'\t' read -r NAME COLOR DESC; do
-  if gh label create "$NAME" --description "$DESC" --color "$COLOR" --force 2>/dev/null; then
-    ((CREATED++))
+  if gh label create "$NAME" --description "$DESC" --color "$COLOR" --force 1>/dev/null; then
+    PROCESSED=$((PROCESSED + 1))
+  else
+    echo "   ⚠️  label '$NAME' 建立失敗" >&2
+    FAILED=$((FAILED + 1))
   fi
-done < <(jq -r '.[] | [.name, .color, .description] | @tsv' "$SCRIPT_DIR/labels.json")
+done < <(jq -r '.[] | [.name, .color, .description] | @tsv' "$LABELS_FILE")
 
-echo "   ✅ $CREATED labels 已建立/更新"
+echo "   ✅ $PROCESSED labels 已建立/更新"
+if [ "$FAILED" -gt 0 ]; then
+  echo "   ⚠️  $FAILED labels 建立失敗，請檢查以上錯誤訊息" >&2
+fi
 
 # --- 完成 ---
 
@@ -66,3 +83,4 @@ echo "🎉 設定完成！下一步："
 echo "   1. 將 .github/ 目錄加入 git 並 commit"
 echo "   2. 在 CLAUDE.md 加入品質系統入口（見 CLAUDE.md.snippet）"
 echo "   3. 用 /quality skill 開始追蹤"
+echo "   4. Companion repo 模式：更新模板中的 quality/ 連結指向品質 repo"

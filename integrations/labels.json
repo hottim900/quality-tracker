@@ -1,13 +1,13 @@
 [
-  {"name": "type:defect",       "color": "d73a4a", "description": "非預期的錯誤",       "required": true},
-  {"name": "type:tech-debt",    "color": "fbca04", "description": "有意識的妥協",       "required": true},
-  {"name": "type:feature-gap",  "color": "0075ca", "description": "功能不完整",         "required": true},
-  {"name": "type:test-infra",   "color": "bfd4f2", "description": "測試覆蓋缺口",       "required": true},
+  {"name": "type:defect",       "color": "d73a4a", "description": "非預期的錯誤"},
+  {"name": "type:tech-debt",    "color": "fbca04", "description": "有意識的妥協"},
+  {"name": "type:feature-gap",  "color": "0075ca", "description": "功能不完整"},
+  {"name": "type:test-infra",   "color": "bfd4f2", "description": "測試覆蓋缺口"},
 
-  {"name": "priority:critical", "color": "b60205", "description": "立即處理（同日）",    "required": true},
-  {"name": "priority:high",     "color": "d93f0b", "description": "下個 Sprint（1-2 週）","required": true},
-  {"name": "priority:medium",   "color": "e4e669", "description": "規劃中（1 個月）",    "required": true},
-  {"name": "priority:low",      "color": "c2e0c6", "description": "有空時處理",          "required": true},
+  {"name": "priority:critical", "color": "b60205", "description": "立即處理（同日）"},
+  {"name": "priority:high",     "color": "d93f0b", "description": "下個 Sprint（1-2 週）"},
+  {"name": "priority:medium",   "color": "e4e669", "description": "規劃中（1 個月）"},
+  {"name": "priority:low",      "color": "c2e0c6", "description": "有空時處理"},
 
   {"name": "status:in-progress",       "color": "1d76db", "description": "正在處理中"},
   {"name": "status:blocked-by-decision","color": "ffffff", "description": "等待人類決策"},

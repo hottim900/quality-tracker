@@ -14,7 +14,7 @@ user-invocable: true
 QUALITY_DIR=/path/to/your/quality
 ```
 
-> **為什麼要絕對路徑？** Claude Code 可能在 git worktree 中執行，worktree 裡不會有品質追蹤檔案。
+> **為什麼要絕對路徑？** Claude Code 可能在 git worktree 中執行，worktree 裡不會有品質系統的參考文件（README.md、defect-taxonomy.md）。
 > 使用絕對路徑確保任何 session 都能正確存取。
 >
 > **範例：**
@@ -58,7 +58,7 @@ gh issue list --label "status:blocked-by-decision" --state open
    - `gh issue create --template tech-debt.yml`
    - `gh issue create --template feature-gap.yml`
    - `gh issue create --template test-infra.yml`
-3. 加上 `priority:` label（模板自動套用 `type:` label）
+3. 加上 `priority:` label（GitHub 模板自動套用 `type:` label；GitLab 及其他 label 需手動加上）
 4. 若 Defect → 在 Issue body 填寫「缺陷子類別」連結搜查手冊
 
 ### 修復完成後

@@ -131,7 +131,7 @@
 
 | Prefix | 用途 | 必填？ | 值 |
 | ------ | ---- | ------ | -- |
-| `type:` | 項目類型 | **必填**（Issue 模板自動套用） | `defect` / `tech-debt` / `feature-gap` / `test-infra` |
+| `type:` | 項目類型 | **必填**（GitHub 模板自動套用；GitLab 需手動加上） | `defect` / `tech-debt` / `feature-gap` / `test-infra` |
 | `priority:` | 優先級 | **必填** | `critical` / `high` / `medium` / `low` |
 | `status:` | 細分狀態 | 選填 | `in-progress` / `blocked-by-decision` |
 | `severity:` | 嚴重度（Defect） | 選填，建議填 | `s1-critical` / `s2-major` / `s3-minor` / `s4-trivial` |
@@ -167,6 +167,7 @@
    - GitHub：`gh issue create --template defect.yml`（或 `tech-debt.yml` / `feature-gap.yml` / `test-infra.yml`）
    - GitLab：`glab issue create --template Defect`（或 `Tech-Debt` / `Feature-Gap` / `Test-Infrastructure`）
 3. 填寫模板中的所有欄位，加上 `priority:` label
+   > **注意：** 模板的下拉選單僅記錄在 Issue body 中，不會自動建立對應的 label。`type:` label 由 GitHub 模板自動套用，其他 label（`priority:`、`severity:` 等）需手動加上。
 4. 若 Defect，填寫「缺陷子類別」（對應 [defect-taxonomy.md](./defect-taxonomy.md) 的 D-XXX 代碼）
 5. 開始處理時，加上 `status:in-progress` label
 
