@@ -2,7 +2,7 @@
 
 為 AI 輔助開發設計的品質追蹤系統。搭配 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 使用。
 
-追蹤三種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
+追蹤四種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口）、**Test Infrastructure**（測試覆蓋與工具建設），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
 
 ---
 
@@ -41,7 +41,7 @@ QUALITY_DIR=/你的品質系統絕對路徑/quality
 ```markdown
 ## 品質管理
 
-品質追蹤系統（Defect / Tech Debt / Feature Gap）在 `quality/README.md`。
+品質追蹤系統（Defect / Tech Debt / Feature Gap / Test Infrastructure）在 `quality/README.md`。
 **操作前必須載入 `/quality` skill。**
 
 修復 bug 時，檢查是否有對應的品質追蹤項目。
@@ -70,15 +70,17 @@ quality/
 ├── TEMPLATE-DEFECT.md             ← Defect 項目模板
 ├── TEMPLATE-TECH-DEBT.md          ← Tech Debt 項目模板
 ├── TEMPLATE-FEATURE-GAP.md        ← Feature Gap 項目模板
+├── TEMPLATE-TEST-INFRA.md         ← Test Infrastructure 項目模板
 ├── defects/                       ← DEF-001-xxx.md, DEF-002-xxx.md, ...
 ├── tech-debt/                     ← TD-001-xxx.md, TD-002-xxx.md, ...
-└── feature-gaps/                  ← FG-001-xxx.md, FG-002-xxx.md, ...
+├── feature-gaps/                  ← FG-001-xxx.md, FG-002-xxx.md, ...
+└── test-infra/                    ← TI-001-xxx.md, TI-002-xxx.md, ...
 ```
 
 | 組件          | 說明                                                                         |
 | ------------- | ---------------------------------------------------------------------------- |
 | **Dashboard** | 統計概覽 + Critical/High 表。只列高優先級項目，其餘用 `glob` 發現。          |
-| **模板**      | 三種獨立模板（Defect / Tech Debt / Feature Gap），每種有專屬 metadata 欄位。 |
+| **模板**      | 四種獨立模板（Defect / Tech Debt / Feature Gap / Test Infrastructure），每種有專屬 metadata 欄位。 |
 | **搜查手冊**  | 6 個內建缺陷類別，各附可執行的 grep 搜查指令。可自行擴充。                   |
 | **Skill**     | Claude Code 的操作指南，讓 AI 知道如何操作整個系統。                         |
 
@@ -90,11 +92,15 @@ quality/
 發現問題
     │
     ▼
-判斷分類（決策樹）
+判斷分類（決策樹，依序判斷）
     │
-    ├─ 有意識的妥協？ → Tech Debt
+    ├─ 有意識的妥協？
+    │   ├─ 測試面？ → Test Infrastructure
+    │   └─ 其他？ → Tech Debt
     ├─ 行為與意圖不符？ → Defect
-    └─ 功能設計不完整？ → Feature Gap
+    └─ 功能不完整？
+        ├─ 測試覆蓋缺口？ → Test Infrastructure
+        └─ 其他？ → Feature Gap
     │
     ▼
 建立項目（複製模板 → 填 metadata → 更新 Dashboard）

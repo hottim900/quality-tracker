@@ -1,6 +1,6 @@
 # 品質管理追蹤
 
-你的專案的品質管理體系。追蹤缺陷、技術債、功能缺口，並維護品質防線。
+你的專案的品質管理體系。追蹤缺陷、技術債、功能缺口、測試覆蓋與工具建設，並維護品質防線。
 
 ---
 
@@ -33,6 +33,10 @@
 | ID  | 描述 |
 | --- | ---- |
 
+### Test Infrastructure
+
+（目前無 Critical/High Test Infrastructure）
+
 ---
 
 ## 分類體系
@@ -41,18 +45,23 @@
 | ---------------- | ---------------------------- | ----------------------- | -------------------------------- |
 | **Defect**       | 非預期的錯誤，寫入時就是錯的 | 立即修復 + 回溯流程漏洞 | [defects/](./defects/)           |
 | **Tech Debt**    | 有意識的妥協，先上線再改     | 排優先級，安排容量      | [tech-debt/](./tech-debt/)       |
-| **Feature Gap**  | 功能不完整，缺少預期互動     | 放進 backlog            | [feature-gaps/](./feature-gaps/) |
-| **Quality Gate** | 防止以上三者進入 codebase    | 持續投資的基礎設施      | （例如 CI、搜查手冊、hook）      |
+| **Feature Gap**          | 功能不完整，缺少預期互動         | 放進 backlog            | [feature-gaps/](./feature-gaps/) |
+| **Test Infrastructure**  | 測試覆蓋缺口與測試工具建設       | 排優先級，系統性補齊    | [test-infra/](./test-infra/)     |
+| **Quality Gate**         | 防止 Defect / Tech Debt / Feature Gap 進入 codebase | 持續投資的基礎設施 | （例如 CI、搜查手冊、hook） |
 
 ### 如何判斷分類？
 
 ```
 這個問題是有意識的妥協嗎？
-├── 是 → Tech Debt（「我知道不夠好，先上線」）
+├── 是 → 妥協的是測試覆蓋或測試工具嗎？
+│   ├── 是 → Test Infrastructure（「知道該寫測試，先上線再補」）
+│   └── 否 → Tech Debt（「我知道不夠好，先上線」）
 └── 否 → 程式碼行為與設計意圖一致嗎？
     ├── 否 → Defect（逃逸缺陷 / 設計缺陷）
     └── 是 → 功能設計完整嗎？
-        ├── 否 → Feature Gap（缺少的互動或資訊）
+        ├── 否 → 缺少的是測試覆蓋嗎？
+        │   ├── 是 → Test Infrastructure（未覆蓋的測試路徑或缺少的測試工具）
+        │   └── 否 → Feature Gap（缺少的互動或資訊）
         └── 是 → 不需要追蹤
 ```
 
@@ -139,9 +148,10 @@
 
 | 分類        | 前綴      | 範例    | 檔名格式                       |
 | ----------- | --------- | ------- | ------------------------------ |
-| Defect      | `DEF-NNN` | DEF-001 | `DEF-001-short-description.md` |
-| Tech Debt   | `TD-NNN`  | TD-001  | `TD-001-short-description.md`  |
-| Feature Gap | `FG-NNN`  | FG-001  | `FG-001-short-description.md`  |
+| Defect              | `DEF-NNN` | DEF-001 | `DEF-001-short-description.md` |
+| Tech Debt           | `TD-NNN`  | TD-001  | `TD-001-short-description.md`  |
+| Feature Gap         | `FG-NNN`  | FG-001  | `FG-001-short-description.md`  |
+| Test Infrastructure | `TI-NNN`  | TI-001  | `TI-001-short-description.md`  |
 
 ---
 
@@ -149,17 +159,20 @@
 
 | 類型        | 模板檔案                                             |
 | ----------- | ---------------------------------------------------- |
-| Defect      | [TEMPLATE-DEFECT.md](./TEMPLATE-DEFECT.md)           |
-| Tech Debt   | [TEMPLATE-TECH-DEBT.md](./TEMPLATE-TECH-DEBT.md)     |
-| Feature Gap | [TEMPLATE-FEATURE-GAP.md](./TEMPLATE-FEATURE-GAP.md) |
+| Defect              | [TEMPLATE-DEFECT.md](./TEMPLATE-DEFECT.md)               |
+| Tech Debt           | [TEMPLATE-TECH-DEBT.md](./TEMPLATE-TECH-DEBT.md)         |
+| Feature Gap         | [TEMPLATE-FEATURE-GAP.md](./TEMPLATE-FEATURE-GAP.md)     |
+| Test Infrastructure | [TEMPLATE-TEST-INFRA.md](./TEMPLATE-TEST-INFRA.md)       |
 
 ---
 
 ## 建立新項目
 
-1. 用[分類決策樹](#如何判斷分類)判斷類型（Defect / Tech Debt / Feature Gap）
+1. 用[分類決策樹](#如何判斷分類)判斷類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）
 2. 決定下一個 ID — `ls` 對應目錄找最大編號 +1
-3. 複製對應模板到目錄：`cp TEMPLATE-DEFECT.md defects/DEF-NNN-short-description.md`
+3. 複製對應模板到目錄，例如：
+   - `cp TEMPLATE-DEFECT.md defects/DEF-NNN-short-description.md`
+   - `cp TEMPLATE-TEST-INFRA.md test-infra/TI-NNN-short-description.md`
 4. 填寫 metadata table 所有欄位（參照上方[定義參考](#定義參考)）
 5. 若 Defect，填寫「缺陷子類別」欄位，連結到 [defect-taxonomy.md](./defect-taxonomy.md) 對應段落
 6. 若優先級為 Critical 或 High → 加入本檔 [Critical/High 表](#critical--high-項目)
