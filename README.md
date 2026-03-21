@@ -2,7 +2,7 @@
 
 為 AI 輔助開發設計的品質追蹤系統。搭配 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 使用。
 
-追蹤四種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口）、**Test Infrastructure**（測試覆蓋缺口），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
+追蹤四種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口）、**Test Infrastructure**（測試覆蓋與工具建設），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
 
 ---
 
