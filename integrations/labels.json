@@ -1,0 +1,36 @@
+[
+  {"name": "type:defect",       "color": "d73a4a", "description": "非預期的錯誤",       "required": true},
+  {"name": "type:tech-debt",    "color": "fbca04", "description": "有意識的妥協",       "required": true},
+  {"name": "type:feature-gap",  "color": "0075ca", "description": "功能不完整",         "required": true},
+  {"name": "type:test-infra",   "color": "bfd4f2", "description": "測試覆蓋缺口",       "required": true},
+
+  {"name": "priority:critical", "color": "b60205", "description": "立即處理（同日）",    "required": true},
+  {"name": "priority:high",     "color": "d93f0b", "description": "下個 Sprint（1-2 週）","required": true},
+  {"name": "priority:medium",   "color": "e4e669", "description": "規劃中（1 個月）",    "required": true},
+  {"name": "priority:low",      "color": "c2e0c6", "description": "有空時處理",          "required": true},
+
+  {"name": "status:in-progress",       "color": "1d76db", "description": "正在處理中"},
+  {"name": "status:blocked-by-decision","color": "ffffff", "description": "等待人類決策"},
+
+  {"name": "severity:s1-critical","color": "b60205", "description": "系統不可用或資料遺失"},
+  {"name": "severity:s2-major",   "color": "d93f0b", "description": "功能異常，無 workaround"},
+  {"name": "severity:s3-minor",   "color": "fbca04", "description": "功能異常，有 workaround"},
+  {"name": "severity:s4-trivial", "color": "c2e0c6", "description": "外觀/文字問題"},
+
+  {"name": "cost:s",  "color": "ededed", "description": "< 2 小時"},
+  {"name": "cost:m",  "color": "ededed", "description": "2 小時 ~ 1 天"},
+  {"name": "cost:l",  "color": "ededed", "description": "1 ~ 3 天"},
+  {"name": "cost:xl", "color": "ededed", "description": "> 3 天"},
+
+  {"name": "escape:code-review",      "color": "d4c5f9", "description": "Code Review 未捕獲"},
+  {"name": "escape:unit-test",        "color": "d4c5f9", "description": "單元測試未覆蓋"},
+  {"name": "escape:integration-test", "color": "d4c5f9", "description": "整合測試未覆蓋"},
+  {"name": "escape:e2e-test",         "color": "d4c5f9", "description": "E2E 測試未覆蓋"},
+  {"name": "escape:production",       "color": "d4c5f9", "description": "生產環境發現"},
+
+  {"name": "root-cause:design",         "color": "fef2c0", "description": "架構/設計錯誤"},
+  {"name": "root-cause:implementation", "color": "fef2c0", "description": "實作與設計不符"},
+  {"name": "root-cause:configuration",  "color": "fef2c0", "description": "配置遺漏"},
+  {"name": "root-cause:framework",      "color": "fef2c0", "description": "框架限制未規避"},
+  {"name": "root-cause:test-coverage",  "color": "fef2c0", "description": "缺少測試覆蓋"}
+]

@@ -4,6 +4,8 @@
 
 追蹤四種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口）、**Test Infrastructure**（測試覆蓋與工具建設），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
 
+品質項目以 **GitHub Issues / GitLab Issues** 追蹤，透過結構化 label 管理 metadata。核心價值是 **搜查手冊（Defect Taxonomy）** — 可重複執行的 grep 搜查模式。
+
 ---
 
 ## 為什麼需要這個？
@@ -24,7 +26,21 @@ AI 輔助開發常見的品質問題：
 
 點選 GitHub 的 **"Use this template"** 按鈕，建立你的 private repo。
 
-### 2. 設定 Claude Code Skill
+### 2. 安裝 Issue/PR 模板和 Labels
+
+根據你的平台執行對應的 setup script：
+
+```bash
+# GitHub
+bash integrations/setup-github.sh
+
+# GitLab
+bash integrations/setup-gitlab.sh
+```
+
+> 前置需求：`gh` 或 `glab` CLI 已安裝且已認證，以及 `jq`。
+
+### 3. 設定 Claude Code Skill
 
 將 `.claude/skills/quality/` 複製到你的專案，然後編輯 `SKILL.md` 頂部：
 
@@ -34,21 +50,11 @@ QUALITY_DIR=/你的品質系統絕對路徑/quality
 
 > **為什麼要絕對路徑？** Claude Code 可能在 git worktree 中執行，相對路徑會指向 worktree 而非品質系統。
 
-### 3. 在 CLAUDE.md 加入入口
+### 4. 在 CLAUDE.md 加入入口
 
-將 `CLAUDE.md.snippet` 的內容貼進你專案的 `CLAUDE.md`：
+將 `CLAUDE.md.snippet` 的內容貼進你專案的 `CLAUDE.md`。
 
-```markdown
-## 品質管理
-
-品質追蹤系統（Defect / Tech Debt / Feature Gap / Test Infrastructure）在 `quality/README.md`。
-**操作前必須載入 `/quality` skill。**
-
-修復 bug 時，檢查是否有對應的品質追蹤項目。
-修復後嚴格執行項目檔底部的「完成步驟」。
-```
-
-### 4. 跑首次搜查
+### 5. 跑首次搜查
 
 在 Claude Code 中：
 
@@ -64,23 +70,22 @@ QUALITY_DIR=/你的品質系統絕對路徑/quality
 
 ```
 quality/
-├── README.md                      ← Dashboard：分類定義、查詢指引、工作流
+├── README.md                      ← 系統參考：分類定義、Label 參考、查詢指引
 ├── defect-taxonomy.md             ← 搜查手冊：6 個缺陷類別 + 擴充指引
-├── quality-system-design-notes.md ← 方法論：設計原則、取捨、AI 效率優化
-├── TEMPLATE-DEFECT.md             ← Defect 項目模板
-├── TEMPLATE-TECH-DEBT.md          ← Tech Debt 項目模板
-├── TEMPLATE-FEATURE-GAP.md        ← Feature Gap 項目模板
-├── TEMPLATE-TEST-INFRA.md         ← Test Infrastructure 項目模板
-├── defects/                       ← DEF-001-xxx.md, DEF-002-xxx.md, ...
-├── tech-debt/                     ← TD-001-xxx.md, TD-002-xxx.md, ...
-├── feature-gaps/                  ← FG-001-xxx.md, FG-002-xxx.md, ...
-└── test-infra/                    ← TI-001-xxx.md, TI-002-xxx.md, ...
+└── quality-system-design-notes.md ← 方法論：設計原則、取捨、AI 效率優化
+
+integrations/
+├── github/                        ← GitHub Issue/PR 模板（YAML forms）
+├── gitlab/                        ← GitLab Issue/MR 模板（markdown）
+├── labels.json                    ← Label 定義（single source of truth）
+├── setup-github.sh                ← GitHub 安裝腳本
+└── setup-gitlab.sh                ← GitLab 安裝腳本
 ```
 
 | 組件          | 說明                                                                         |
 | ------------- | ---------------------------------------------------------------------------- |
-| **Dashboard** | 分類定義、查詢指引、工作流。所有狀態由 item 檔案衍生，透過查詢取得。        |
-| **模板**      | 四種獨立模板（Defect / Tech Debt / Feature Gap / Test Infrastructure），每種有專屬 metadata 欄位。 |
+| **系統參考**  | 分類決策樹、定義參考、Label 參考、完成步驟。                                |
+| **Issue 模板**| 四種 Issue 模板（Defect / Tech Debt / Feature Gap / Test Infrastructure），各有專屬 metadata 欄位。 |
 | **搜查手冊**  | 6 個內建缺陷類別，各附可執行的 grep 搜查指令。可自行擴充。                   |
 | **Skill**     | Claude Code 的操作指南，讓 AI 知道如何操作整個系統。                         |
 
@@ -103,13 +108,13 @@ quality/
         └─ 其他？ → Feature Gap
     │
     ▼
-建立項目（複製模板 → 填 metadata）
+建立 Issue（用 Issue 模板 → 加 label）
     │
     ▼
-修復
+修復 → PR/MR（含缺陷掃查）
     │
     ▼
-完成 Checklist（狀態→Done、完成紀錄、檢查相依）
+關閉 Issue（完成 comment → 檢查相依 → 更新 taxonomy）
 ```
 
 ---
@@ -120,18 +125,17 @@ quality/
 
 ### 模式 A：Companion Repo（建議）
 
-品質系統作為獨立的 private repo，不在主專案的 git 歷史中。
+品質系統（搜查手冊 + 設計文件）作為獨立的 private repo。品質 Issues 建立在 **project repo**（程式碼所在的 repo），因為 Issue 與程式碼緊密關聯。
 
-- 主專案 `.gitignore` 加入 `quality/`（或品質 repo 放在主專案外）
-- 品質 repo 獨立 commit + push
-- **優點**：資料隔離、主專案 git log 不混雜品質追蹤紀錄
-- **適用**：品質資料需要保密的場景
+- 搜查手冊中的搜查結果用 `owner/project-repo#N` 格式引用 project repo 的 Issue
+- **優點**：搜查手冊和方法論獨立版控，可套用到多個專案
+- **適用**：品質方法論需要跨專案共用、或搜查手冊需要保密的場景
 
 ### 模式 B：Collocated
 
-品質目錄直接在主專案 repo 內。
+品質目錄直接在主專案 repo 內。Issues 自然在同一個 repo。
 
-- `quality/` 正常 tracked in git
+- 搜查結果用 `#N` 格式引用 Issue（自動連結）
 - **優點**：簡單、一個 repo 管理所有
 - **適用**：開源專案、品質資料不需保密的場景
 
@@ -148,11 +152,12 @@ quality/
 用 Claude Code 的 PostToolUse hook 自動化品質防線。範例見 [`examples/hooks/`](./examples/hooks/)：
 
 - **migration-safety.sh** — Migration 程式碼安全檢查（阻擋危險操作）
-- **quality-item-consistency.sh** — Done 項目的 checklist 一致性檢查（阻擋未完成）
 
 ### 統計腳本
 
-`bash examples/scripts/quality-stats.sh [quality-dir]` — 輸出各類別/優先級/狀態的統計報告。
+`bash examples/scripts/quality-stats.sh --github` — 透過 `gh`/`glab` CLI 查詢 Issues，輸出各類別/優先級/狀態的統計報告。
+
+> 前置需求：`gh` 或 `glab` CLI 已認證、網路連線。
 
 ### 方法論
 
@@ -166,6 +171,8 @@ quality/
 
 - [`examples/sparkle/`](./examples/sparkle/) — **TypeScript / Bun / SQLite**（Sparkle PKM）：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。
 - [`examples/dotnet/`](./examples/dotnet/) — **.NET Clean Architecture + EF Core + React**：13 個缺陷類別，涵蓋 EF Core 配置、異常語意、授權 IDOR、前端 cache invalidation 等 .NET 專案常見問題。
+
+> 上述範例使用舊的 `[DEF-NNN](path)` 檔案連結格式。Issue-native 模式下改用 `#N`（collocated）或 `owner/repo#N`（companion repo）格式。
 
 ## 授權
 

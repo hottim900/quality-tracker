@@ -24,24 +24,26 @@ QUALITY_DIR=/path/to/your/quality
 
 ## 快速操作
 
-### 發現活躍項目
+> 以下指令以 `gh` (GitHub) 為例。GitLab 替換 `gh issue` → `glab issue`。
 
 ```bash
 # 列出所有活躍 Defect
-glob ${QUALITY_DIR}/defects/DEF-*.md
+gh issue list --label "type:defect" --state open
 
-# 列出所有活躍 Tech Debt
-glob ${QUALITY_DIR}/tech-debt/TD-*.md
+# 列出所有活躍 Tech Debt / Feature Gap / Test Infrastructure
+gh issue list --label "type:tech-debt" --state open
+gh issue list --label "type:feature-gap" --state open
+gh issue list --label "type:test-infra" --state open
 
-# 列出所有活躍 Feature Gap
-glob ${QUALITY_DIR}/feature-gaps/FG-*.md
+# 列出正在處理中的項目
+gh issue list --label "status:in-progress" --state open
 
-# 列出所有活躍 Test Infrastructure
-glob ${QUALITY_DIR}/test-infra/TI-*.md
+# 列出 Critical/High 項目
+gh issue list --label "priority:critical" --state open
+gh issue list --label "priority:high" --state open
 
-# 搜尋特定狀態的項目（所有目錄）
-grep '狀態.*Pending' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${QUALITY_DIR}/feature-gaps/ ${QUALITY_DIR}/test-infra/
-grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${QUALITY_DIR}/feature-gaps/ ${QUALITY_DIR}/test-infra/
+# 列出等待決策的項目
+gh issue list --label "status:blocked-by-decision" --state open
 ```
 
 ### 建立新項目
@@ -51,23 +53,21 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
 簡要流程：
 
 1. 判斷類型（[決策樹](${QUALITY_DIR}/README.md#如何判斷分類)）— Defect / Tech Debt / Feature Gap / Test Infrastructure
-2. 決定 ID → `ls` 對應目錄找最大編號 +1
-   - Defect → `ls ${QUALITY_DIR}/defects/`
-   - Tech Debt → `ls ${QUALITY_DIR}/tech-debt/`
-   - Feature Gap → `ls ${QUALITY_DIR}/feature-gaps/`
-   - Test Infrastructure → `ls ${QUALITY_DIR}/test-infra/`
-3. 複製對應模板 → 填寫 metadata
-4. 若 Defect → 填寫「缺陷子類別」連結搜查手冊
-
-> 填寫「受影響檔案」時，「問題」欄要包含足夠語意描述（函式名、行為），使重構後仍可 grep 定位。
+2. 用對應的 Issue 模板建立 Issue：
+   - `gh issue create --template defect.yml`
+   - `gh issue create --template tech-debt.yml`
+   - `gh issue create --template feature-gap.yml`
+   - `gh issue create --template test-infra.yml`
+3. 加上 `priority:` label（模板自動套用 `type:` label）
+4. 若 Defect → 在 Issue body 填寫「缺陷子類別」連結搜查手冊
 
 ### 修復完成後
 
 > **IMPORTANT:** 嚴格執行 [完成步驟](${QUALITY_DIR}/README.md#完成步驟)，缺任何一步 = 未完成。
 
 完成步驟適用於所有類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）：
-1. 項目檔狀態改 Done + 填寫完成紀錄
-2. 若「相依」有 Complements/Blocks → 檢查對方是否需更新
+1. 關閉 Issue + 填寫完成 comment（Commit/PR、修改摘要、測試結果）
+2. 若有相依 Issue（Complements/Blocks）→ 檢查對方 Issue 是否需更新
 3. 若 Defect 且為系統性搜查中發現 → 確認搜查結果已記錄於 taxonomy
 
 ---
@@ -86,7 +86,7 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
 
 ## 行為準則
 
-- **修復 bug 時**：檢查是否有對應的品質追蹤項目。若無且是系統性問題 → 建議建立（但由人類決定）。
+- **修復 bug 時**：檢查是否有對應的品質追蹤 Issue。若無且是系統性問題 → 建議建立（但由人類決定）。
 - **發現新問題時**：記錄到 README「待追蹤發現」段落。**不要主動升級為正式項目**。
 - **搜查手冊中發現同類問題時**：記錄到搜查手冊的「搜查結果」中。
 - **完成修復後**：嚴格執行「完成步驟」，不要遺漏任何一步。
