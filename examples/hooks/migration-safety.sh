@@ -32,6 +32,11 @@
 # 2. Warn if DROP TABLE items without foreign_keys = OFF
 # 3. Warn if setSchemaVersion inside transaction block
 
+if ! command -v jq &>/dev/null; then
+  echo "❌ migration-safety.sh 需要 jq，但未安裝" >&2
+  exit 2
+fi
+
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 

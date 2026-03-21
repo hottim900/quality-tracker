@@ -25,14 +25,19 @@
 
 QUALITY_DIR="quality"
 
+if ! command -v jq &>/dev/null; then
+  echo "❌ quality-item-consistency.sh 需要 jq，但未安裝" >&2
+  exit 2
+fi
+
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
-# Only check quality item files
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/DEF-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/TD-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/FG-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
+# Only check quality item files (handle both absolute and relative paths)
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/DEF-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TD-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/FG-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
 
 # Skip if file doesn't exist (deleted)
 [ -f "$FILE_PATH" ] || exit 0

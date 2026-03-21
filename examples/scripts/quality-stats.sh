@@ -8,7 +8,7 @@
 #   ./quality-stats.sh [quality-dir]
 #
 # 預設：quality-dir = quality/
-# 需求：bash + grep（零外部依賴）
+# 需求：bash + 標準 POSIX 工具（grep, find, sed 等）
 # ======================================================================
 
 QUALITY_DIR="${1:-quality}"
@@ -43,7 +43,7 @@ for CAT in "${CATEGORIES[@]}"; do
   for STATUS in "${STATUSES[@]}"; do
     COUNT=0
     if [ -d "$CAT_DIR" ]; then
-      COUNT=$(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null | xargs grep -l "狀態.*$STATUS" 2>/dev/null | grep -v '/archive/' | wc -l)
+      COUNT=$(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null | xargs grep -l "狀態.*$STATUS" 2>&1 | grep -v '/archive/' | grep -v 'No such file' | wc -l)
     fi
     COUNTS+=("$COUNT")
     TOTAL=$((TOTAL + COUNT))
