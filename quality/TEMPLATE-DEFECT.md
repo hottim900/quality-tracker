@@ -81,12 +81,9 @@
 > **IMPORTANT:** 修復完成後，依序執行以下步驟。缺任何一步 = 未完成。
 > 詳細定義見 [README.md 完成步驟](../README.md#完成步驟)。
 
-- [ ] 本檔「狀態」改為 Done
-- [ ] 填寫下方「完成紀錄」
-- [ ] 若本項在 README.md Critical/High 表中 → 移除該行
-- [ ] 更新 README.md 統計概覽（活躍項目數、Critical/High 計數）
+- [ ] 本檔「狀態」改為 Done，填寫下方「完成紀錄」
 - [ ] 若「相依」有 Complements/Blocks 項目 → 檢查對方檔案是否需更新
-- [ ] 搜查手冊 [defect-taxonomy.md](../defect-taxonomy.md) 的對應類別「已知實例」加入本項連結
+- [ ] 若本項為系統性搜查中發現 → 確認搜查結果已記錄於 [defect-taxonomy.md](../defect-taxonomy.md)
 
 ## 完成紀錄
 

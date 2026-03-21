@@ -57,8 +57,9 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
    - Feature Gap → `ls ${QUALITY_DIR}/feature-gaps/`
    - Test Infrastructure → `ls ${QUALITY_DIR}/test-infra/`
 3. 複製對應模板 → 填寫 metadata
-4. 若 Critical/High → 更新 Dashboard 對應區塊
-5. 若 Defect → 連結搜查手冊
+4. 若 Defect → 填寫「缺陷子類別」連結搜查手冊
+
+> 填寫「受影響檔案」時，「問題」欄要包含足夠語意描述（函式名、行為），使重構後仍可 grep 定位。
 
 ### 修復完成後
 
@@ -66,10 +67,8 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
 
 完成步驟適用於所有類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）：
 1. 項目檔狀態改 Done + 填寫完成紀錄
-2. 從 Dashboard Critical/High 表移除（若有列）
-3. 更新統計概覽數字
-4. 檢查相依項目
-5. 若 Defect → 更新搜查手冊已知實例
+2. 若「相依」有 Complements/Blocks → 檢查對方是否需更新
+3. 若 Defect 且為系統性搜查中發現 → 確認搜查結果已記錄於 taxonomy
 
 ---
 
@@ -80,7 +79,7 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
 - **定義**：什麼模式構成此類缺陷
 - **搜查方式**：可執行的 grep/搜查指令
 - **判定標準**：如何判斷是否為缺陷
-- **已知實例**：連結到 DEF 項目
+- **搜查結果**：發現、low-risk observations、判定合理
 
 執行搜查時，讀取 `${QUALITY_DIR}/defect-taxonomy.md` 取得每個類別的具體搜查指令。
 

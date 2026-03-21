@@ -4,38 +4,17 @@
 
 ---
 
-## 統計概覽
+## 快速查詢
 
-| 指標                | 數值  |
-| ------------------- | ----- |
-| 活躍項目            | 0     |
-| Critical / High     | 0 / 0 |
-| Blocked-by-Decision | 0     |
+> 本系統不維護手動統計數字 — 所有狀態由 item 檔案的 metadata 衍生，透過查詢取得即時結果。
 
----
-
-## Critical + High 項目
-
-> **只列 Critical/High。** Medium/Low 項目不列於此 — 用 `glob defects/DEF-*.md` 發現。
-> 項目完成後從此表移除，項目檔內的狀態改為 Done。
-
-### Defects
-
-| ID  | 嚴重度 | 描述 |
-| --- | ------ | ---- |
-
-### Tech Debt
-
-（目前無 Critical/High Tech Debt）
-
-### Feature Gaps
-
-| ID  | 描述 |
-| --- | ---- |
-
-### Test Infrastructure
-
-（目前無 Critical/High Test Infrastructure）
+| 查詢                 | 指令                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 活躍項目             | `grep -rl '狀態.*Pending\|狀態.*In Progress' defects/ tech-debt/ feature-gaps/ test-infra/`                                                |
+| Critical/High 活躍   | `grep -rl '優先級.*Critical\|優先級.*High' defects/ tech-debt/ feature-gaps/ test-infra/ \| xargs grep -l '狀態.*Pending\|狀態.*In Progress'` |
+| Blocked 項目         | `grep -rl 'Blocked-by-Decision' defects/ tech-debt/ feature-gaps/ test-infra/`                                                             |
+| 搜查進度             | 見 [defect-taxonomy.md 分類總覽](./defect-taxonomy.md#分類總覽)                                                                            |
+| 統計報告             | `bash examples/scripts/quality-stats.sh`                                                                                                   |
 
 ---
 
@@ -140,28 +119,13 @@
 - 影響範圍確認比預期小（例如只在特定邊界條件觸發）
 - 外部壓力消失（deadline 延後、相關功能暫停開發）
 
-> **操作：** 調整優先級時，更新項目檔的優先級欄位並簡述變更原因。若涉及 Critical/High 表的進出，同步更新 Dashboard。
+> **操作：** 調整優先級時，更新項目檔的優先級欄位並簡述變更原因。
 
 ---
 
 ## 搜查手冊
 
 定義所有已知缺陷類別和可重複執行的搜查模式：**[defect-taxonomy.md](./defect-taxonomy.md)**
-
-### 搜查進度
-
-> 此表追蹤 [defect-taxonomy.md](./defect-taxonomy.md) 中各缺陷搜查類別的進度（不含 Tech Debt / Feature Gap 等其他分類）。
-> 詳細的搜查指令、判定標準與完整結果記錄在 taxonomy 檔案中 — **taxonomy 為 source of truth**，此表為快速總覽。
-> 更新搜查結果時，兩處需同步更新。
-
-| 缺陷類別 | 搜查狀態 | 結果摘要 |
-| -------- | -------- | -------- |
-| D-SILENT — 靜默失敗與錯誤吞沒 | 待搜查 | |
-| D-VALID — 輸入驗證缺口 | 待搜查 | |
-| D-AUTH — 認證、授權與安全防線 | 待搜查 | |
-| D-TYPE — 型別安全漏洞 | 待搜查 | |
-| D-PERF — 效能問題 | 待搜查 | |
-| D-EDGE — 邊界條件與資源限制 | 待搜查 | |
 
 ---
 
@@ -207,8 +171,6 @@
    - `cp TEMPLATE-TEST-INFRA.md test-infra/TI-NNN-short-description.md`
 4. 填寫 metadata table 所有欄位（參照上方[定義參考](#定義參考)）
 5. 若 Defect，填寫「缺陷子類別」欄位，連結到 [defect-taxonomy.md](./defect-taxonomy.md) 對應段落
-6. 若優先級為 Critical 或 High → 加入本檔 [Critical/High 表](#critical--high-項目)
-7. 更新[統計概覽](#統計概覽)數字
 
 ---
 
@@ -216,12 +178,9 @@
 
 > **IMPORTANT:** 修復完成後，依序執行以下步驟。缺任何一步 = 未完成。
 
-1. 項目檔「狀態」改為 Done
-2. 填寫項目檔「完成紀錄」（Commit、修改摘要、測試結果）
-3. 若本項在 Critical/High 表中 → 移除該行
-4. 更新統計概覽（活躍項目數、Critical/High 計數）
-5. 若「相依」有 Complements/Blocks 項目 → 檢查對方是否需更新
-6. 搜查手冊的「已知實例」加入本項連結（若為 Defect）
+1. 項目檔「狀態」改為 Done，填寫「完成紀錄」（Commit、修改摘要、測試結果）
+2. 若「相依」有 Complements/Blocks 項目 → 檢查對方是否需更新
+3. 若為 Defect 且在系統性搜查中發現 → 確認搜查結果已記錄於 [defect-taxonomy.md](./defect-taxonomy.md)
 
 ---
 

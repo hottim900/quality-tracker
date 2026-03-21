@@ -20,7 +20,7 @@
 
 | 決策             | 選擇                          | 放棄                | 理由                             |
 | ---------------- | ----------------------------- | ------------------- | -------------------------------- |
-| Dashboard 策略   | README 只列 Critical/High     | 列出所有項目        | 項目增長到 100+ 時 README 不膨脹 |
+| Dashboard 策略   | README 無手動維護狀態，全部由查詢取得 | 手動維護統計/表格   | 零同步，item 檔案為唯一 source of truth |
 | 發現機制         | `glob` + `grep`（零維護）     | INDEX.md 索引檔     | 減少冗餘，AI 本身就能搜尋        |
 | 模板分類         | 四種獨立模板                  | 一個模板 + 條件欄位 | 避免 AI 填錯不適用的欄位         |
 | 檔名慣例         | ID 前綴（`DEF-001-xxx.md`）   | 日期前綴            | 搜尋結果即時可辨識，不需開檔     |
@@ -57,23 +57,22 @@
 
 明確告訴 AI「不要主動升級為正式項目」，避免 AI 過度主動地建立大量低優先級項目。
 
-### 3.4 雙向連結
+### 3.4 連結與發現
 
-- **Taxonomy → Item：** 搜查手冊每個已知實例有可點擊連結到 DEF 項目
 - **Item → Taxonomy：** 每個 Defect 的「缺陷子類別」有可點擊連結到搜查手冊段落
+- **Taxonomy → Item：** 透過搜查結果段落記錄（搜查過程中發現的項目），或用 `grep -rl '缺陷子類別.*D-XXX' defects/` 反向查詢
 
 ### 3.5 AI 效率 Checklist（啟用品質系統時確認）
 
-| #   | 項目                            | 驗證方式                                      |
-| --- | ------------------------------- | --------------------------------------------- |
-| 1   | CLAUDE.md 有品質系統入口        | `grep '品質' CLAUDE.md`                       |
-| 2   | 每個項目有「完成步驟」checklist | `grep -rl '完成步驟' quality/`                |
-| 3   | Checklist 包含「更新統計概覽」  | `grep -rl '統計概覽' quality/defects/`        |
-| 4   | README 只列 Critical/High       | 目視確認 Medium/Low 不在表格中                |
-| 5   | 搜查手冊有反向連結到 DEF 項目   | `grep -c '\[DEF-' quality/defect-taxonomy.md` |
-| 6   | DEF 項目有正向連結到搜查手冊    | `grep '\[D-' quality/defects/DEF-*.md`        |
-| 7   | README 有「建立新項目」流程     | `grep '建立新項目' quality/README.md`         |
-| 8   | 「待追蹤發現」有行動指引        | `grep 'AI 行動指引' quality/README.md`        |
+| #   | 項目                                      | 驗證方式                                       |
+| --- | ----------------------------------------- | ---------------------------------------------- |
+| 1   | CLAUDE.md 有品質系統入口                  | `grep '品質' CLAUDE.md`                        |
+| 2   | 每個項目有「完成步驟」checklist           | `grep -rl '完成步驟' quality/`                 |
+| 3   | README 有「快速查詢」section              | `grep '快速查詢' quality/README.md`            |
+| 4   | SKILL.md 完成步驟與 README 一致           | 比對兩處步驟數與內容                           |
+| 5   | DEF 項目有正向連結到搜查手冊              | `grep '\[D-' quality/defects/DEF-*.md`         |
+| 6   | README 有「建立新項目」流程               | `grep '建立新項目' quality/README.md`          |
+| 7   | 「待追蹤發現」有行動指引                  | `grep 'AI 行動指引' quality/README.md`         |
 
 ---
 
