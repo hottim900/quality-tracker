@@ -45,20 +45,20 @@
 | Go | `*.go` |
 | Java/Kotlin | `*.java` `*.kt` |
 
-完整的技術棧適配範例見 [examples/dotnet/](https://github.com/hottim900/quality-tracker/tree/main/examples/dotnet)（.NET）和 [examples/sparkle/](https://github.com/hottim900/quality-tracker/tree/main/examples/sparkle)（TypeScript/Bun）。
+完整的技術棧適配範例見 [examples/dotnet/](../examples/dotnet/)（.NET）和 [examples/sparkle/](../examples/sparkle/)（TypeScript/Bun）。
 
 ---
 
 ## 分類總覽
 
-| 代號     | 缺陷類別             | 層級              | 已知實例       | 搜查狀態 |
-| -------- | -------------------- | ----------------- | -------------- | -------- |
-| D-SILENT | 靜默失敗與錯誤吞沒   | 全層              | 見搜查結果     | 待搜查   |
-| D-VALID  | 輸入驗證缺口         | API               | 見搜查結果     | 待搜查   |
-| D-AUTH   | 認證、授權與安全防線 | API / 全層        | 見搜查結果     | 待搜查   |
-| D-TYPE   | 型別安全漏洞         | Frontend / Server | 見搜查結果     | 待搜查   |
-| D-PERF   | 效能問題             | 全層              | 見搜查結果     | 待搜查   |
-| D-EDGE   | 邊界條件與資源限制   | 全層              | 見搜查結果     | 待搜查   |
+| 代號     | 缺陷類別             | 層級              | 搜查狀態 |
+| -------- | -------------------- | ----------------- | -------- |
+| D-SILENT | 靜默失敗與錯誤吞沒   | 全層              | 待搜查   |
+| D-VALID  | 輸入驗證缺口         | API               | 待搜查   |
+| D-AUTH   | 認證、授權與安全防線 | API / 全層        | 待搜查   |
+| D-TYPE   | 型別安全漏洞         | Frontend / Server | 待搜查   |
+| D-PERF   | 效能問題             | 全層              | 待搜查   |
+| D-EDGE   | 邊界條件與資源限制   | 全層              | 待搜查   |
 
 ---
 

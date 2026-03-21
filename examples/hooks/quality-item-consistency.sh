@@ -21,21 +21,28 @@
 # 3. 將 QUALITY_DIR 改為你的品質系統路徑
 #
 # Hook pattern 與 migration-safety.sh 相同（JSON stdin、exit 0/2）。
+# 需求：bash + jq
 # ======================================================================
 
 QUALITY_DIR="quality"
 
+if ! command -v jq &>/dev/null; then
+  echo "quality-item-consistency.sh requires jq but it is not installed" >&2
+  exit 2
+fi
+
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
-# Only check quality item files
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/DEF-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/TD-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/FG-*.md ]] || \
-[[ "$FILE_PATH" == */"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
+# Only check quality item files (match both relative and absolute paths)
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/DEF-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TD-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/FG-*.md ]] || \
+[[ "$FILE_PATH" == *"$QUALITY_DIR"/*/TI-*.md ]] || exit 0
 
-# Skip if file doesn't exist (deleted)
+# Skip if file doesn't exist (deleted) or is in archive/
 [ -f "$FILE_PATH" ] || exit 0
+[[ "$FILE_PATH" == */archive/* ]] && exit 0
 
 # Check: Done items should not have unchecked boxes
 if grep -q '狀態.*Done' "$FILE_PATH"; then

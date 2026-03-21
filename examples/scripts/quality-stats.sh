@@ -8,7 +8,7 @@
 #   ./quality-stats.sh [quality-dir]
 #
 # 預設：quality-dir = quality/
-# 需求：bash + grep（零外部依賴）
+# 需求：POSIX 環境（bash + coreutils）
 # ======================================================================
 
 QUALITY_DIR="${1:-quality}"
@@ -37,13 +37,18 @@ for CAT in "${CATEGORIES[@]}"; do
   IFS=':' read -r NAME DIR PREFIX <<< "$CAT"
   CAT_DIR="$QUALITY_DIR/$DIR"
 
-  # Count files (exclude .gitkeep and archive/)
+  # Count files per status (exclude archive/)
   TOTAL=0
   COUNTS=()
   for STATUS in "${STATUSES[@]}"; do
     COUNT=0
     if [ -d "$CAT_DIR" ]; then
-      COUNT=$(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null | xargs grep -l "狀態.*$STATUS" 2>/dev/null | grep -v '/archive/' | wc -l)
+      while IFS= read -r F; do
+        [[ "$F" == */archive/* ]] && continue
+        if grep -q "狀態.*$STATUS" "$F" 2>/dev/null; then
+          COUNT=$((COUNT + 1))
+        fi
+      done < <(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null)
     fi
     COUNTS+=("$COUNT")
     TOTAL=$((TOTAL + COUNT))
@@ -88,11 +93,14 @@ for CAT in "${CATEGORIES[@]}"; do
     [[ "$F" == */archive/* ]] && continue
     if grep -q '優先級.*Critical\|優先級.*High' "$F" && ! grep -q '狀態.*Done' "$F"; then
       ID=$(basename "$F" .md | grep -oE '^(DEF|TD|FG|TI)-[0-9]+')
-      PRIORITY=$(grep '優先級' "$F" | head -1 | sed 's/.*優先級[^|]*| *\([^ |]*\).*/\1/')
-      STATUS=$(grep '狀態' "$F" | head -1 | sed 's/.*狀態[^|]*| *\([^ |]*\).*/\1/')
+      [ -n "$ID" ] || continue
+      PRIORITY=$(grep '優先級' "$F" | head -1 | sed 's/.*優先級[^|]*| *\([^|]*[^ |]\).*/\1/')
+      STATUS=$(grep '狀態' "$F" | head -1 | sed 's/.*狀態[^|]*| *\([^|]*[^ |]\).*/\1/')
       printf "%-10s | %-10s | %s\n" "$ID" "$PRIORITY" "$STATUS"
       FOUND=1
     fi
   done < <(find "$CAT_DIR" -maxdepth 1 -name "*.md" 2>/dev/null)
 done
 [ "$FOUND" -eq 0 ] && echo "（目前無 Critical/High 活躍項目）"
+
+exit 0
