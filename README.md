@@ -92,12 +92,15 @@ quality/
 發現問題
     │
     ▼
-判斷分類（決策樹）
+判斷分類（決策樹，依序判斷）
     │
-    ├─ 測試覆蓋缺口？ → Test Infrastructure
-    ├─ 有意識的妥協？ → Tech Debt
+    ├─ 有意識的妥協？
+    │   ├─ 測試面？ → Test Infrastructure
+    │   └─ 其他？ → Tech Debt
     ├─ 行為與意圖不符？ → Defect
-    └─ 功能設計不完整？ → Feature Gap
+    └─ 功能不完整？
+        ├─ 測試覆蓋缺口？ → Test Infrastructure
+        └─ 其他？ → Feature Gap
     │
     ▼
 建立項目（複製模板 → 填 metadata → 更新 Dashboard）

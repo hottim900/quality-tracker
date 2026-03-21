@@ -39,9 +39,9 @@ glob ${QUALITY_DIR}/feature-gaps/FG-*.md
 # 列出所有活躍 Test Infrastructure
 glob ${QUALITY_DIR}/test-infra/TI-*.md
 
-# 搜尋特定狀態的項目
-grep '狀態.*Pending' ${QUALITY_DIR}/defects/
-grep '狀態.*In Progress' ${QUALITY_DIR}/defects/
+# 搜尋特定狀態的項目（所有目錄）
+grep '狀態.*Pending' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${QUALITY_DIR}/feature-gaps/ ${QUALITY_DIR}/test-infra/
+grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${QUALITY_DIR}/feature-gaps/ ${QUALITY_DIR}/test-infra/
 ```
 
 ### 建立新項目
@@ -50,15 +50,26 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/
 
 簡要流程：
 
-1. 判斷類型（[決策樹](${QUALITY_DIR}/README.md#如何判斷分類)）
+1. 判斷類型（[決策樹](${QUALITY_DIR}/README.md#如何判斷分類)）— Defect / Tech Debt / Feature Gap / Test Infrastructure
 2. 決定 ID → `ls` 對應目錄找最大編號 +1
-3. 複製模板 → 填寫 metadata
-4. 若 Critical/High → 更新 Dashboard
+   - Defect → `ls ${QUALITY_DIR}/defects/`
+   - Tech Debt → `ls ${QUALITY_DIR}/tech-debt/`
+   - Feature Gap → `ls ${QUALITY_DIR}/feature-gaps/`
+   - Test Infrastructure → `ls ${QUALITY_DIR}/test-infra/`
+3. 複製對應模板 → 填寫 metadata
+4. 若 Critical/High → 更新 Dashboard 對應區塊
 5. 若 Defect → 連結搜查手冊
 
 ### 修復完成後
 
 > **IMPORTANT:** 嚴格執行 [完成步驟](${QUALITY_DIR}/README.md#完成步驟)，缺任何一步 = 未完成。
+
+完成步驟適用於所有類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）：
+1. 項目檔狀態改 Done + 填寫完成紀錄
+2. 從 Dashboard Critical/High 表移除（若有列）
+3. 更新統計概覽數字
+4. 檢查相依項目
+5. 若 Defect → 更新搜查手冊已知實例
 
 ---
 

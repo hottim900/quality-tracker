@@ -37,7 +37,7 @@
 
 第四類 **Test Infrastructure** 追蹤測試覆蓋缺口和測試基礎設施建設 — 與 Defect/Tech Debt 不同，TI 項目的產出是「新增測試」而非「修改產品程式碼」。決策樹中優先判斷，因為測試缺口常被混入 Tech Debt（「不夠好」）或 Defect（「缺少覆蓋」），獨立分類讓追蹤更精確。
 
-第五類 **Quality Gate** 獨立於決策樹 — 不是「要修的東西」，而是「防止前四類進入 codebase 的基礎設施」（例如架構測試、CI 品質關卡、搜查手冊）。
+第五類 **Quality Gate** 獨立於決策樹 — 不是「要修的東西」，而是「防止 Defect / Tech Debt / Feature Gap 進入 codebase 的基礎設施」（例如架構測試、CI 品質關卡、搜查手冊）。TI 本身就是 Quality Gate 的一部分 — 補齊測試覆蓋就是在建立防線。
 
 ---
 

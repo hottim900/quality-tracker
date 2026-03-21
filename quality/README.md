@@ -33,6 +33,10 @@
 | ID  | 描述 |
 | --- | ---- |
 
+### Test Infrastructure
+
+（目前無 Critical/High Test Infrastructure）
+
 ---
 
 ## 分類體系
@@ -42,21 +46,23 @@
 | **Defect**       | 非預期的錯誤，寫入時就是錯的 | 立即修復 + 回溯流程漏洞 | [defects/](./defects/)           |
 | **Tech Debt**    | 有意識的妥協，先上線再改     | 排優先級，安排容量      | [tech-debt/](./tech-debt/)       |
 | **Feature Gap**          | 功能不完整，缺少預期互動         | 放進 backlog            | [feature-gaps/](./feature-gaps/) |
-| **Test Infrastructure**  | 測試覆蓋缺口、測試基礎設施建設   | 排優先級，系統性補齊    | [test-infra/](./test-infra/)     |
-| **Quality Gate**         | 防止以上四者進入 codebase        | 持續投資的基礎設施      | （例如 CI、搜查手冊、hook）      |
+| **Test Infrastructure**  | 測試覆蓋缺口與測試工具建設       | 排優先級，系統性補齊    | [test-infra/](./test-infra/)     |
+| **Quality Gate**         | 防止 Defect / Tech Debt / Feature Gap 進入 codebase | 持續投資的基礎設施 | （例如 CI、搜查手冊、hook） |
 
 ### 如何判斷分類？
 
 ```
-這個問題是測試覆蓋或測試基礎設施缺口嗎？
-├── 是 → Test Infrastructure（缺少的測試層或測試工具）
-└── 否 → 這個問題是有意識的妥協嗎？
-    ├── 是 → Tech Debt（「我知道不夠好，先上線」）
-    └── 否 → 程式碼行為與設計意圖一致嗎？
-        ├── 否 → Defect（逃逸缺陷 / 設計缺陷）
-        └── 是 → 功能設計完整嗎？
-            ├── 否 → Feature Gap（缺少的互動或資訊）
-            └── 是 → 不需要追蹤
+這個問題是有意識的妥協嗎？
+├── 是 → 妥協的是測試覆蓋或測試工具嗎？
+│   ├── 是 → Test Infrastructure（「知道該寫測試，先上線再補」）
+│   └── 否 → Tech Debt（「我知道不夠好，先上線」）
+└── 否 → 程式碼行為與設計意圖一致嗎？
+    ├── 否 → Defect（逃逸缺陷 / 設計缺陷）
+    └── 是 → 功能設計完整嗎？
+        ├── 否 → 缺少的是測試覆蓋嗎？
+        │   ├── 是 → Test Infrastructure（未覆蓋的測試路徑或缺少的測試工具）
+        │   └── 否 → Feature Gap（缺少的互動或資訊）
+        └── 是 → 不需要追蹤
 ```
 
 ---
@@ -164,7 +170,9 @@
 
 1. 用[分類決策樹](#如何判斷分類)判斷類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）
 2. 決定下一個 ID — `ls` 對應目錄找最大編號 +1
-3. 複製對應模板到目錄：`cp TEMPLATE-DEFECT.md defects/DEF-NNN-short-description.md`
+3. 複製對應模板到目錄，例如：
+   - `cp TEMPLATE-DEFECT.md defects/DEF-NNN-short-description.md`
+   - `cp TEMPLATE-TEST-INFRA.md test-infra/TI-NNN-short-description.md`
 4. 填寫 metadata table 所有欄位（參照上方[定義參考](#定義參考)）
 5. 若 Defect，填寫「缺陷子類別」欄位，連結到 [defect-taxonomy.md](./defect-taxonomy.md) 對應段落
 6. 若優先級為 Critical 或 High → 加入本檔 [Critical/High 表](#critical--high-項目)
