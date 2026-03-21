@@ -62,7 +62,7 @@ fetch_issues() {
       | jq '[.[] | select(.labels | map(.name) | any(startswith("type:")))]'
   else
     glab issue list --all --per-page "$QUERY_LIMIT" --output json \
-      | jq '[.[] | {number: .iid, title: .title, state: .state, labels: [.labels[] | {name: .}]}]'
+      | jq '[.[] | {number: .iid, title: .title, state: .state, labels: [(.labels // [])[] | {name: .}]}]'
   fi
 }
 
@@ -121,7 +121,7 @@ echo "=== 優先級統計（活躍項目）==="
 for PRIORITY in "critical" "high" "medium" "low"; do
   COUNT=$(echo "$ISSUES" | jq --arg p "priority:$PRIORITY" "$JQ_DEFS"'
     [.[] | select(is_open and has_label($p))] | length')
-  DISPLAY_NAME="$(echo "$PRIORITY" | sed 's/^./\U&/'):"
+  DISPLAY_NAME="$(echo "$PRIORITY" | awk '{print toupper(substr($0,1,1)) substr($0,2)}'):"
   printf "%-10s %d\n" "$DISPLAY_NAME" "$COUNT"
 done
 echo ""

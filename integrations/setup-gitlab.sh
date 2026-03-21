@@ -18,6 +18,11 @@ if ! command -v glab &>/dev/null; then
   exit 1
 fi
 
+if ! glab auth status &>/dev/null; then
+  echo "❌ glab CLI 未認證。請先執行 glab auth login" >&2
+  exit 1
+fi
+
 if ! command -v jq &>/dev/null; then
   echo "❌ 需要 jq。安裝：https://jqlang.github.io/jq/download/" >&2
   exit 1
