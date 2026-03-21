@@ -76,10 +76,9 @@ grep '狀態.*In Progress' ${QUALITY_DIR}/defects/ ${QUALITY_DIR}/tech-debt/ ${Q
 
 系統性搜查工具，定義已知缺陷類別。每個類別有：
 
-- **定義**：什麼模式構成此類缺陷
+- **定義**：什麼模式構成此類缺陷，含判定標準
 - **搜查方式**：可執行的 grep/搜查指令
-- **判定標準**：如何判斷是否為缺陷
-- **搜查結果**：發現、low-risk observations、判定合理
+- **搜查結果**：範圍與命中數、發現、low-risk observations、判定合理
 
 執行搜查時，讀取 `${QUALITY_DIR}/defect-taxonomy.md` 取得每個類別的具體搜查指令。
 

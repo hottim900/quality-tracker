@@ -12,7 +12,7 @@
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | 活躍項目             | `grep -rl '狀態.*Pending\|狀態.*In Progress' defects/ tech-debt/ feature-gaps/ test-infra/`                                                |
 | Critical/High 活躍   | `grep -rl '優先級.*Critical\|優先級.*High' defects/ tech-debt/ feature-gaps/ test-infra/ \| xargs grep -l '狀態.*Pending\|狀態.*In Progress'` |
-| Blocked 項目         | `grep -rl 'Blocked-by-Decision' defects/ tech-debt/ feature-gaps/ test-infra/`                                                             |
+| Blocked 項目         | `grep -rl '狀態.*Blocked-by-Decision' defects/ tech-debt/ feature-gaps/ test-infra/`                                                             |
 | 搜查進度             | 見 [defect-taxonomy.md 分類總覽](./defect-taxonomy.md#分類總覽)                                                                            |
 | 統計報告             | `bash examples/scripts/quality-stats.sh`                                                                                                   |
 
@@ -186,7 +186,7 @@
 
 ## 封存（Archival）
 
-Done 項目的下一個生命週期階段。項目留在原目錄不影響系統運作 — `grep '狀態.*Pending\|In Progress'` 可過濾活躍項目。
+Done 項目的下一個生命週期階段。項目留在原目錄不影響系統運作 — `grep '狀態.*Pending\|狀態.*In Progress'` 可過濾活躍項目。
 
 項目累積過多時（建議閾值：單一目錄超過 30 個 Done 項目），可選擇封存：
 
