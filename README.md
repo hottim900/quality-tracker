@@ -145,7 +145,15 @@ quality/
 
 ### Hook 整合
 
-用 Claude Code 的 PostToolUse hook 自動化品質防線。範例見 [`examples/hooks/`](./examples/hooks/)。
+用 Claude Code 的 PostToolUse hook 自動化品質防線。範例見 [`examples/hooks/`](./examples/hooks/)：
+
+- **migration-safety.sh** — Migration 程式碼安全檢查（阻擋危險操作）
+- **quality-item-consistency.sh** — Done 項目的 checklist 一致性檢查（阻擋未完成）
+- **dashboard-sync-check.sh** — Critical/High 項目變更時提醒更新 Dashboard（advisory）
+
+### 統計腳本
+
+`bash examples/scripts/quality-stats.sh [quality-dir]` — 輸出各類別/優先級/狀態的統計報告。
 
 ### 方法論
 

@@ -32,6 +32,20 @@
 
 > **Claude Code 提示：** 以下各類別的 grep 指令為搜查邏輯的參考寫法。在 Claude Code 中請用內建 Grep 工具執行，`--include` 對應 `glob` 參數。
 
+### 技術棧適配
+
+本手冊的搜查指令以 TypeScript/React 為範例。適配到其他語言時，調整副檔名和搜查模式：
+
+| 技術棧 | `--include` 參數 |
+|--------|-----------------|
+| TypeScript/React | `*.ts` `*.tsx` |
+| .NET / C# | `*.cs` |
+| Python | `*.py` |
+| Go | `*.go` |
+| Java/Kotlin | `*.java` `*.kt` |
+
+完整的技術棧適配範例見 [examples/dotnet/](https://github.com/hottim900/quality-tracker/tree/main/examples/dotnet)（.NET）和 [examples/sparkle/](https://github.com/hottim900/quality-tracker/tree/main/examples/sparkle)（TypeScript/Bun）。
+
 ---
 
 ## 分類總覽
