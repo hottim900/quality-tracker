@@ -124,7 +124,9 @@
 
 ### 搜查進度
 
-> 快速總覽各缺陷類別的搜查狀態。詳細的搜查指令、判定標準與完整結果記錄在 [defect-taxonomy.md](./defect-taxonomy.md)。
+> 此表追蹤 [defect-taxonomy.md](./defect-taxonomy.md) 中各缺陷搜查類別的進度（不含 Tech Debt / Feature Gap 等其他分類）。
+> 詳細的搜查指令、判定標準與完整結果記錄在 taxonomy 檔案中 — **taxonomy 為 source of truth**，此表為快速總覽。
+> 更新搜查結果時，兩處需同步更新。
 
 | 缺陷類別 | 搜查狀態 | 結果摘要 |
 | -------- | -------- | -------- |
