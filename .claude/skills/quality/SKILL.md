@@ -1,6 +1,6 @@
 ---
 name: quality
-description: Quality tracking system operations guide. Use when fixing bugs, managing defect/tech-debt/feature-gap items, or running code quality audits.
+description: Quality tracking system operations guide. Use when fixing bugs, managing defect/tech-debt/feature-gap/test-infra items, or running code quality audits.
 user-invocable: true
 ---
 
@@ -35,6 +35,9 @@ glob ${QUALITY_DIR}/tech-debt/TD-*.md
 
 # 列出所有活躍 Feature Gap
 glob ${QUALITY_DIR}/feature-gaps/FG-*.md
+
+# 列出所有活躍 Test Infrastructure
+glob ${QUALITY_DIR}/test-infra/TI-*.md
 
 # 搜尋特定狀態的項目
 grep '狀態.*Pending' ${QUALITY_DIR}/defects/
