@@ -20,12 +20,13 @@
 
 | 決策             | 選擇                          | 放棄                | 理由                             |
 | ---------------- | ----------------------------- | ------------------- | -------------------------------- |
-| Dashboard 策略   | README 無手動維護狀態，全部由查詢取得 | 手動維護統計/表格   | 零同步，item 檔案為唯一 source of truth |
-| 發現機制         | `glob` + `grep`（零維護）     | INDEX.md 索引檔     | 減少冗餘，AI 本身就能搜尋        |
-| 模板分類         | 四種獨立模板                  | 一個模板 + 條件欄位 | 避免 AI 填錯不適用的欄位         |
-| 檔名慣例         | ID 前綴（`DEF-001-xxx.md`）   | 日期前綴            | 搜尋結果即時可辨識，不需開檔     |
-| 優先級 vs 嚴重度 | 分離為兩個欄位                | 合併為一個          | 「何時修」和「多嚴重」是不同維度 |
-| 內容重複         | canonical location + 交叉引用 | 每處都完整記載      | 避免多處更新造成不一致           |
+| 追蹤機制         | GitHub/GitLab Issues + Labels   | Markdown 追蹤檔     | Issue tracker 原生支援搜尋、過濾、assign、自動 close、Board |
+| Dashboard 策略   | Issue Board + Label 過濾        | 手動維護統計/表格   | 零同步，Issue 狀態為 source of truth |
+| 發現機制         | `gh/glab issue list` + label 過濾 | `glob` + `grep`   | 語意查詢，不依賴檔案系統結構        |
+| 模板分類         | 四種 Issue 模板（YAML forms / markdown） | 一個模板 + 條件欄位 | GitHub YAML forms 提供下拉選單驗證   |
+| Metadata 編碼    | Label prefix（`type:` / `priority:` / `severity:`） | Markdown 表格欄位 | 可搜尋、可過濾、可統計              |
+| 優先級 vs 嚴重度 | 分離為兩組 label                | 合併為一個          | 「何時修」和「多嚴重」是不同維度 |
+| 內容重複         | canonical location + Issue 交叉引用 | 每處都完整記載  | 避免多處更新造成不一致           |
 
 ---
 
@@ -51,7 +52,7 @@
 
 ### 3.2 完成步驟 Checklist（AI 防遺漏）
 
-每個項目檔底部有明確的完成步驟。AI 最常犯的錯就是改完原始碼但忘記更新追蹤文件。
+SKILL.md 明確列出完成步驟（關閉 Issue + 填寫完成 comment + 檢查相依 + 更新 taxonomy）。AI 最常犯的錯就是改完原始碼但忘記更新追蹤狀態。
 
 ### 3.3 待追蹤發現的行動指引
 
@@ -59,20 +60,38 @@
 
 ### 3.4 連結與發現
 
-- **Item → Taxonomy：** 每個 Defect 的「缺陷子類別」有可點擊連結到搜查手冊段落
-- **Taxonomy → Item：** 透過搜查結果段落記錄（搜查過程中發現的項目），或用 `grep -rl '缺陷子類別.*D-XXX' defects/` 反向查詢
+- **Issue → Taxonomy：** Defect Issue body 的「缺陷子類別」欄位記錄 D-XXX 代碼
+- **Taxonomy → Issue：** 搜查結果段落以 `#N` 格式記錄發現的 Issue（collocated）或 `owner/repo#N`（companion repo）
 
 ### 3.5 AI 效率 Checklist（啟用品質系統時確認）
 
 | #   | 項目                                      | 驗證方式                                       |
 | --- | ----------------------------------------- | ---------------------------------------------- |
 | 1   | CLAUDE.md 有品質系統入口                  | `grep '品質' CLAUDE.md`                        |
-| 2   | 每個項目有「完成步驟」checklist           | `grep -rl '完成步驟' quality/`                 |
+| 2   | SKILL.md 有「完成步驟」指引               | `grep '完成步驟' .claude/skills/quality/SKILL.md` |
 | 3   | README 有「快速查詢」section              | `grep '快速查詢' quality/README.md`            |
 | 4   | SKILL.md 完成步驟與 README 一致           | 比對兩處步驟數與內容                           |
-| 5   | DEF 項目有正向連結到搜查手冊              | `grep '\[D-' quality/defects/DEF-*.md`         |
+| 5   | Issue 模板已安裝（.github/ 或 .gitlab/）  | `ls .github/ISSUE_TEMPLATE/ 2>/dev/null \|\| ls .gitlab/issue_templates/` |
 | 6   | README 有「建立新項目」流程               | `grep '建立新項目' quality/README.md`          |
 | 7   | 「待追蹤發現」有行動指引                  | `grep 'AI 行動指引' quality/README.md`         |
+
+### 3.6 Issue-Native 遷移理由
+
+原系統使用 markdown 檔案（DEF-001.md 等）追蹤品質項目。遷移至 Issue/PR-native 的原因：
+
+| 面向 | Markdown 追蹤檔 | Issue/PR-Native |
+| ---- | -------------- | --------------- |
+| 搜尋與過濾 | `grep` 文字搜尋 | Label 語意過濾，原生 Board |
+| 協作 | 手動通知 | 原生 assign、comment、mention |
+| 狀態管理 | 手動改 metadata 表 | Open/Closed + label，PR 自動 close |
+| 統計 | 自訂 bash script | 平台原生 Insights / API |
+| 可移植性 | 零依賴（純 markdown） | 需要 GitHub/GitLab + CLI |
+| AI 操作 | 讀寫本地檔案 | 需要 `gh`/`glab` CLI |
+
+**已知 trade-off：**
+- Sweep checkbox 從 hook 強制驗證退化為 PR template 中的 honor-based checkbox（Issue-native 無對應的檔案層 hook 目標）
+- 統計腳本從離線可用變為需要 CLI 認證 + 網路
+- Companion repo 模式需使用 `owner/repo#N` 格式跨 repo 引用 Issue
 
 ---
 

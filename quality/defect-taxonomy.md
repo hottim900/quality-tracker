@@ -13,15 +13,15 @@
 每個類別搜查完畢後，記錄以下內容：
 
 1. **搜查範圍與命中數** — 例如「`server/` + `src/` 全部 `.ts/.tsx`，共 70 個 catch 區塊」。這是下次搜查的**基線**，用於偵測 pattern 是否仍然有效（命中數驟降 = pattern 可能需要更新）。
-2. **發現（建 DEF）** — 確認的缺陷，已建立追蹤項目。格式：`[DEF-NNN](連結) — 描述`
-3. **Low-risk observations（不建 DEF）** — 可疑但影響太低，不值得正式追蹤。記錄檔案位置和原因，供未來參考。
+2. **發現（建 Issue）** — 確認的缺陷，已建立追蹤 Issue。格式：`#N — 描述`（collocated 模式）或 `owner/repo#N — 描述`（companion repo 模式）
+3. **Low-risk observations（不建 Issue）** — 可疑但影響太低，不值得正式追蹤。記錄檔案位置和原因，供未來參考。
 4. **審查但判定合理（非缺陷）** — 經審查排除的項目。記錄判定理由，避免下次重複審查。
 
 **範例（假想）：**
 
 > **發現：**
 >
-> - [DEF-001](./defects/DEF-001-example.md) — `src/api.ts` 的 catch 區塊吞沒了 HTTP 錯誤，使用者看不到失敗通知
+> - #1 — `src/api.ts` 的 catch 區塊吞沒了 HTTP 錯誤，使用者看不到失敗通知
 >
 > **Low-risk observations：**
 >

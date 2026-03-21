@@ -2,30 +2,34 @@
 
 你的專案的品質管理體系。追蹤缺陷、技術債、功能缺口、測試覆蓋與工具建設，並維護品質防線。
 
+透過 GitHub Issues / GitLab Issues 管理品質項目，搭配 [defect-taxonomy.md](./defect-taxonomy.md) 搜查手冊進行系統性缺陷掃查。
+
 ---
 
 ## 快速查詢
 
-> 本系統不維護手動統計數字 — 所有狀態由 item 檔案的 metadata 衍生，透過查詢取得即時結果。
+> 品質項目以 Issue 追蹤，透過 label 過濾取得即時結果。
+> 以下指令以 `gh` (GitHub) 為例，GitLab 替換為 `glab`。
 
-| 查詢                 | 指令                                                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 活躍項目             | `grep -Erl '狀態.*(Pending\|In Progress)' defects/ tech-debt/ feature-gaps/ test-infra/`                                                           |
-| Critical/High 活躍   | `grep -Erl '優先級.*(Critical\|High)' defects/ tech-debt/ feature-gaps/ test-infra/ \| xargs grep -El '狀態.*(Pending\|In Progress)'` |
-| Blocked 項目         | `grep -rl '狀態.*Blocked-by-Decision' defects/ tech-debt/ feature-gaps/ test-infra/`                                                             |
-| 搜查進度             | 見 [defect-taxonomy.md 分類總覽](./defect-taxonomy.md#分類總覽)                                                                            |
-| 統計報告             | `bash examples/scripts/quality-stats.sh`                                                                                                   |
+| 查詢                 | 指令                                                                         |
+| -------------------- | ---------------------------------------------------------------------------- |
+| 活躍項目             | `gh issue list --label "type:defect" --state open`                          |
+| Critical/High 活躍   | `gh issue list --label "priority:critical" --state open`                    |
+| In Progress 項目     | `gh issue list --label "status:in-progress" --state open`                   |
+| Blocked 項目         | `gh issue list --label "status:blocked-by-decision" --state open`           |
+| 搜查進度             | 見 [defect-taxonomy.md 分類總覽](./defect-taxonomy.md#分類總覽)              |
+| 統計報告             | `bash examples/scripts/quality-stats.sh --github`                           |
 
 ---
 
 ## 分類體系
 
-| 分類             | 定義                         | 處理策略                | 目錄                             |
-| ---------------- | ---------------------------- | ----------------------- | -------------------------------- |
-| **Defect**       | 非預期的錯誤，寫入時就是錯的 | 立即修復 + 回溯流程漏洞 | [defects/](./defects/)           |
-| **Tech Debt**    | 有意識的妥協，先上線再改     | 排優先級，安排容量      | [tech-debt/](./tech-debt/)       |
-| **Feature Gap**          | 功能不完整，缺少預期互動         | 放進 backlog            | [feature-gaps/](./feature-gaps/) |
-| **Test Infrastructure**  | 測試覆蓋缺口與測試工具建設       | 排優先級，系統性補齊    | [test-infra/](./test-infra/)     |
+| 分類             | 定義                         | 處理策略                | Label              |
+| ---------------- | ---------------------------- | ----------------------- | ------------------ |
+| **Defect**       | 非預期的錯誤，寫入時就是錯的 | 立即修復 + 回溯流程漏洞 | `type:defect`      |
+| **Tech Debt**    | 有意識的妥協，先上線再改     | 排優先級，安排容量      | `type:tech-debt`   |
+| **Feature Gap**          | 功能不完整，缺少預期互動         | 放進 backlog            | `type:feature-gap` |
+| **Test Infrastructure**  | 測試覆蓋缺口與測試工具建設       | 排優先級，系統性補齊    | `type:test-infra`  |
 | **Quality Gate**         | 防止 Defect / Tech Debt / Feature Gap 進入 codebase | 持續投資的基礎設施 | （例如 CI、搜查手冊、hook） |
 
 ### 如何判斷分類？
@@ -50,12 +54,12 @@
 
 ### 狀態
 
-| 狀態                    | 定義                                  |
-| ----------------------- | ------------------------------------- |
-| **Pending**             | 已記錄，等待處理                      |
-| **In Progress**         | 正在修復中                            |
-| **Blocked-by-Decision** | 解決方案需要人類決策，AI 不應自行推進 |
-| **Done**                | 修復完成，已通過驗收                  |
+| 狀態                    | Issue 對應                        | 定義                                  |
+| ----------------------- | --------------------------------- | ------------------------------------- |
+| **Pending**             | Open（無 status label）           | 已記錄，等待處理                      |
+| **In Progress**         | Open + `status:in-progress`       | 正在修復中                            |
+| **Blocked-by-Decision** | Open + `status:blocked-by-decision` | 解決方案需要人類決策，AI 不應自行推進 |
+| **Done**                | Closed                            | 修復完成，已通過驗收                  |
 
 ### 優先級（業務緊急度 — 何時修）
 
@@ -119,7 +123,23 @@
 - 影響範圍確認比預期小（例如只在特定邊界條件觸發）
 - 外部壓力消失（deadline 延後、相關功能暫停開發）
 
-> **操作：** 調整優先級時，更新項目檔的優先級欄位並簡述變更原因。
+> **操作：** 調整優先級時，更新 Issue 的 `priority:` label 並在 comment 簡述變更原因。
+
+---
+
+## Label 參考
+
+| Prefix | 用途 | 必填？ | 值 |
+| ------ | ---- | ------ | -- |
+| `type:` | 項目類型 | **必填**（GitHub 模板自動套用；GitLab 需手動加上） | `defect` / `tech-debt` / `feature-gap` / `test-infra` |
+| `priority:` | 優先級 | **必填** | `critical` / `high` / `medium` / `low` |
+| `status:` | 細分狀態 | 選填 | `in-progress` / `blocked-by-decision` |
+| `severity:` | 嚴重度（Defect） | 選填，建議填 | `s1-critical` / `s2-major` / `s3-minor` / `s4-trivial` |
+| `cost:` | 成本 | 選填 | `s` / `m` / `l` / `xl` |
+| `escape:` | 逃逸階段（Defect） | 選填，建議填 | `code-review` / `unit-test` / `integration-test` / `e2e-test` / `production` |
+| `root-cause:` | 根因（Defect） | 選填 | `design` / `implementation` / `configuration` / `framework` / `test-coverage` |
+
+> 完整 label 定義見 `integrations/labels.json`。各專案可擴充 `defect-category:d-xxx` label 對應自己的 taxonomy。
 
 ---
 
@@ -140,37 +160,16 @@
 
 ---
 
-## ID 編碼規則
-
-| 分類        | 前綴      | 範例    | 檔名格式                       |
-| ----------- | --------- | ------- | ------------------------------ |
-| Defect              | `DEF-NNN` | DEF-001 | `DEF-001-short-description.md` |
-| Tech Debt           | `TD-NNN`  | TD-001  | `TD-001-short-description.md`  |
-| Feature Gap         | `FG-NNN`  | FG-001  | `FG-001-short-description.md`  |
-| Test Infrastructure | `TI-NNN`  | TI-001  | `TI-001-short-description.md`  |
-
----
-
-## 模板
-
-| 類型        | 模板檔案                                             |
-| ----------- | ---------------------------------------------------- |
-| Defect              | [TEMPLATE-DEFECT.md](./TEMPLATE-DEFECT.md)               |
-| Tech Debt           | [TEMPLATE-TECH-DEBT.md](./TEMPLATE-TECH-DEBT.md)         |
-| Feature Gap         | [TEMPLATE-FEATURE-GAP.md](./TEMPLATE-FEATURE-GAP.md)     |
-| Test Infrastructure | [TEMPLATE-TEST-INFRA.md](./TEMPLATE-TEST-INFRA.md)       |
-
----
-
 ## 建立新項目
 
 1. 用[分類決策樹](#如何判斷分類)判斷類型（Defect / Tech Debt / Feature Gap / Test Infrastructure）
-2. 決定下一個 ID — `ls` 對應目錄找最大編號 +1
-3. 複製對應模板到目錄，例如：
-   - `cp TEMPLATE-DEFECT.md defects/DEF-NNN-short-description.md`
-   - `cp TEMPLATE-TEST-INFRA.md test-infra/TI-NNN-short-description.md`
-4. 填寫 metadata table 所有欄位（參照上方[定義參考](#定義參考)）
-5. 若 Defect，填寫「缺陷子類別」欄位，連結到 [defect-taxonomy.md](./defect-taxonomy.md) 對應段落
+2. 用對應的 Issue 模板建立 Issue：
+   - GitHub：`gh issue create --template defect.yml`（或 `tech-debt.yml` / `feature-gap.yml` / `test-infra.yml`）
+   - GitLab：`glab issue create --template Defect`（或 `Tech-Debt` / `Feature-Gap` / `Test-Infrastructure`）
+3. 填寫模板中的所有欄位，加上 `priority:` label
+   > **注意：** 模板的下拉選單僅記錄在 Issue body 中，不會自動建立對應的 label。`type:` label 由 GitHub 模板自動套用，其他 label（`priority:`、`severity:` 等）需手動加上。
+4. 若 Defect，填寫「缺陷子類別」（對應 [defect-taxonomy.md](./defect-taxonomy.md) 的 D-XXX 代碼）
+5. 開始處理時，加上 `status:in-progress` label
 
 ---
 
@@ -178,22 +177,12 @@
 
 > **IMPORTANT:** 修復完成後，依序執行以下步驟。缺任何一步 = 未完成。
 
-1. 項目檔「狀態」改為 Done，填寫「完成紀錄」（Commit、修改摘要、測試結果）
-2. 若「相依」有 Complements/Blocks 項目 → 檢查對方是否需更新
+1. 關閉 Issue，填寫完成 comment：
+   ```
+   ## 完成紀錄
+   **Commit/PR：** abc1234 或 PR 連結
+   **修改摘要：** 簡述實際修改
+   **測試結果：** X passed, 0 failed
+   ```
+2. 若有相依 Issue（Complements/Blocks）→ 檢查對方 Issue 是否需更新
 3. 若為 Defect 且在系統性搜查中發現 → 確認搜查結果已記錄於 [defect-taxonomy.md](./defect-taxonomy.md)
-
----
-
-## 封存（Archival）
-
-Done 項目的下一個生命週期階段。項目留在原目錄不影響系統運作 — `grep -E '狀態.*(Pending|In Progress)'` 可過濾活躍項目。
-
-項目累積過多時（建議閾值：單一目錄超過 30 個 Done 項目），可選擇封存：
-
-1. 在對應目錄建立 `archive/` 子目錄（例如 `defects/archive/`）
-2. 將 Done 項目移入：`mv defects/DEF-001-*.md defects/archive/`
-
-### 不建議
-
-- **不要刪除** Done 項目 — 歷史紀錄是學習資產（根因分析、逃逸階段統計）
-- **不要過早封存** — 最近完成的項目可能需要回顧，建議至少保留一個月
