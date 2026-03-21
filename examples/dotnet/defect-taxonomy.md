@@ -4,8 +4,11 @@
 > 每個類別附帶搜查指令、判定標準、和搜查結果記錄。
 
 > 此範例展示 .NET Clean Architecture + EF Core + React 專案的搜查手冊。基於實際專案的 3 輪系統性搜查經驗，涵蓋 13 個缺陷類別。
+>
+> **與通用模板的關係：** 通用模板（`quality/defect-taxonomy.md`）提供 6 個技術棧無關的類別（D-SILENT、D-VALID、D-AUTH、D-TYPE、D-PERF、D-EDGE）。本範例針對 .NET 技術棧重新定義了部分同名類別（D-AUTH、D-VALID、D-EDGE）的搜查指令，並新增了 .NET 專屬類別（D-EFC、D-CACHE、D-EXC 等）。使用時建議以本範例取代通用模板中的對應類別，而非疊加使用。
 
 **建立日期：** 2026-03-21
+**最後更新：** 2026-03-21
 
 > **工具提示：** 以下搜查指令使用 `grep -rn` 格式撰寫，方便在終端直接執行。若使用 Claude Code，建議改用內建的 Grep tool（基於 ripgrep），語法更簡潔且效能更佳。例如 `grep -rn "pattern" src/ --include="*.cs"` 等效於 Grep tool 的 `pattern: "pattern", path: "src/", glob: "*.cs"`。
 
