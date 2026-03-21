@@ -147,9 +147,12 @@ quality/
 
 ---
 
-## 來自 Sparkle
+## 實戰範例
 
-本系統在 Sparkle 個人知識管理專案中經過實戰驗證：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。[`examples/sparkle/`](./examples/sparkle/) 包含 Sparkle 的完整搜查手冊（12 個類別 + 搜查結果），展示真實專案的使用方式。
+不同技術棧的搜查手冊範例，展示如何將通用方法論適配到具體專案：
+
+- [`examples/sparkle/`](./examples/sparkle/) — **TypeScript / Bun / SQLite**（Sparkle PKM）：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。
+- [`examples/dotnet/`](./examples/dotnet/) — **.NET Clean Architecture + EF Core + React**：13 個缺陷類別，涵蓋 EF Core 配置、異常語意、授權 IDOR、前端 cache invalidation 等 .NET 專案常見問題。
 
 ## 授權
 
