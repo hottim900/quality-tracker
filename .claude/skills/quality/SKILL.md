@@ -82,7 +82,7 @@ gh issue list --label "status:blocked-by-decision" --state open
 
 執行搜查時，讀取 `${QUALITY_DIR}/defect-taxonomy.md` 取得每個類別的具體搜查指令。
 
-搜查完成後，檢查該類別是否有 charter seed（「What grep can't find」段落）。如果有，向使用者建議 ET session — 見上方「探索式測試 (ET)」章節。
+搜查完成後，檢查該類別是否有 charter seed（「What grep can't find」段落）。如果有，向使用者建議 ET session — 見下方「探索式測試 (ET)」章節。
 
 ---
 
