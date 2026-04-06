@@ -12,6 +12,7 @@
 | **根因類別** | <!-- Design Defect / Implementation Error / Configuration Omission / Framework Limitation / Missing Test Coverage --> |
 | **逃逸階段** | <!-- Code Review / Unit Test / Integration Test / E2E Test / Production --> |
 | **缺陷子類別** | <!-- D-SILENT / D-VALID / D-AUTH / D-TYPE / D-PERF / D-EDGE --> |
+| **發現方式** | <!-- taxonomy-sweep / et-session / code-review / production（使用品質系統時填寫，否則留空） --> |
 
 > 定義與分類標準見 quality/README.md。缺陷搜查手冊見 quality/defect-taxonomy.md。
 

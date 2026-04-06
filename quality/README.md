@@ -138,14 +138,32 @@
 | `cost:` | 成本 | 選填 | `s` / `m` / `l` / `xl` |
 | `escape:` | 逃逸階段（Defect） | 選填，建議填 | `code-review` / `unit-test` / `integration-test` / `e2e-test` / `production` |
 | `root-cause:` | 根因（Defect） | 選填 | `design` / `implementation` / `configuration` / `framework` / `test-coverage` |
+| `discovery-method:` | 發現方式（Defect） | 選填 | `taxonomy-sweep` / `et-session` / `code-review` / `production` |
 
 > 完整 label 定義見 `integrations/labels.json`。各專案可擴充 `defect-category:d-xxx` label 對應自己的 taxonomy。
+>
+> `escape:` 和 `discovery-method:` 是不同維度：`escape:` = 「應該在哪裡被攔住」，`discovery-method:` = 「實際上怎麼被發現的」。兩者搭配使用能看出哪些逃逸階段正在漏給哪些發現方式。
 
 ---
 
 ## 搜查手冊
 
 定義所有已知缺陷類別和可重複執行的搜查模式：**[defect-taxonomy.md](./defect-taxonomy.md)**
+
+---
+
+## 探索式測試 (ET)
+
+搜查手冊覆蓋已知的 grep 可搜模式。但有些問題 grep 永遠找不到：業務邊界條件、意圖判斷、生產環境獨特性。
+
+探索式測試（ET）用輕量的 charter 結構，引導人類探索這些搜查手冊的盲區。
+
+- **雙層模型：** AI 執行層（grep 搜查）+ 人類判斷層（ET 探索），兩者互饋 → [discovery-strategy.md](./discovery-strategy.md)
+- **Charter 模板：** 4T 欄位（Target, Task, Timebox, Trigger），5 分鐘寫完 → [et-charter-template.md](./et-charter-template.md)
+- **Charter Seed：** 搜查手冊每個 D-XXX 類別的「What grep can't find」段落 → [defect-taxonomy.md](./defect-taxonomy.md)
+- **真實範例：** Sparkle 專案的 ET session 執行紀錄 → [examples/sparkle/et-charters.md](../examples/sparkle/et-charters.md)
+
+ET session 發現的缺陷用 `discovery-method:et-session` label 追蹤。
 
 ---
 
@@ -186,3 +204,12 @@
    ```
 2. 若有相依 Issue（Complements/Blocks）→ 檢查對方 Issue 是否需更新
 3. 若為 Defect 且在系統性搜查中發現 → 確認搜查結果已記錄於 [defect-taxonomy.md](./defect-taxonomy.md)
+
+---
+
+## See also
+
+- [discovery-strategy.md](./discovery-strategy.md) — 雙層品質發現模型
+- [et-charter-template.md](./et-charter-template.md) — 探索式測試 Charter 模板
+- [defect-taxonomy.md](./defect-taxonomy.md) — 缺陷分類學搜查手冊
+- [quality-system-design-notes.md](./quality-system-design-notes.md) — 設計筆記與方法論來源

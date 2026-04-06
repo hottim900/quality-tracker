@@ -4,3 +4,5 @@
 
 修復 bug 時，用 `gh issue list --label "type:defect"` 檢查是否有對應的品質追蹤 Issue。
 修復後嚴格執行 `/quality` skill 中的「完成步驟」。
+
+品質系統包含兩層發現機制：搜查手冊（grep 搜查已知模式）和探索式測試（ET，探索 grep 搜不到的業務邊界和意圖判斷問題）。搜查完成後，`/quality` skill 會建議對應的 ET session。詳見 `quality/discovery-strategy.md`。

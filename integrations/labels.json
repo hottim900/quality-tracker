@@ -32,5 +32,10 @@
   {"name": "root-cause:implementation", "color": "fef2c0", "description": "實作與設計不符"},
   {"name": "root-cause:configuration",  "color": "fef2c0", "description": "配置遺漏"},
   {"name": "root-cause:framework",      "color": "fef2c0", "description": "框架限制未規避"},
-  {"name": "root-cause:test-coverage",  "color": "fef2c0", "description": "缺少測試覆蓋"}
+  {"name": "root-cause:test-coverage",  "color": "fef2c0", "description": "缺少測試覆蓋"},
+
+  {"name": "discovery-method:taxonomy-sweep", "color": "c5def5", "description": "搜查手冊系統性掃查發現"},
+  {"name": "discovery-method:et-session",     "color": "c5def5", "description": "探索式測試 session 發現"},
+  {"name": "discovery-method:code-review",    "color": "c5def5", "description": "Code review 中發現"},
+  {"name": "discovery-method:production",     "color": "c5def5", "description": "生產環境發現"}
 ]

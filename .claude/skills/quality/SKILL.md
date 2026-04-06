@@ -82,6 +82,56 @@ gh issue list --label "status:blocked-by-decision" --state open
 
 執行搜查時，讀取 `${QUALITY_DIR}/defect-taxonomy.md` 取得每個類別的具體搜查指令。
 
+搜查完成後，檢查該類別是否有 charter seed（「What grep can't find」段落）。如果有，向使用者建議 ET session — 見下方「探索式測試 (ET)」章節。
+
+---
+
+## 探索式測試 (ET)
+
+搜查手冊覆蓋已知的 grep 可搜模式。ET 處理 grep 搜不到的問題：業務邊界、意圖判斷、跨功能互動。
+
+完整方法論見 `${QUALITY_DIR}/discovery-strategy.md`。Charter 模板見 `${QUALITY_DIR}/et-charter-template.md`。
+
+### 何時建議 ET session
+
+完成搜查手冊的掃查後，或遇到以下信號時，建議使用者進行 ET session。檢查 5 個觸發條件：
+
+| # | 觸發條件 | 信號 | 建議的 Charter |
+|---|----------|------|----------------|
+| 1 | **Post-sweep** | 剛完成某 D-XXX 類別的搜查 | 該類別的 charter seed（「What grep can't find」段落） |
+| 2 | **Design defect** | Issue 有 `root-cause:design` label | Target: 該 Issue 涉及的設計決策，Task: 探索同一設計決策影響的其他功能 |
+| 3 | **Production escape** | Issue 有 `escape:production` label | Target: 該 Issue 的功能區域，Task: 探索自動化管道漏掉的同類場景 |
+| 4 | **New feature** | 使用者上線了新功能但沒有對應的搜查覆蓋 | Target: 新功能，Task: 探索邊界條件和錯誤處理路徑 |
+| 5 | **Pattern repeat** | 同區域短期內出現 2+ 個 Issue | Target: 該區域，Task: 探索系統性根因 |
+
+每個 charter 使用 4T 欄位：
+- **Target（目標）：** 要探索的系統區域
+- **Task（任務）：** 具體要做什麼
+- **Timebox（時限）：** 30 min（預設）
+- **Trigger（觸發）：** 上表中的哪個條件
+
+### 如何建議
+
+1. 讀取 `${QUALITY_DIR}/defect-taxonomy.md` 中相關 D-XXX 類別的 charter seed
+2. 如果該類別沒有 charter seed，建議一般性 ET session：基於類別定義，探索 grep pattern 無法覆蓋的業務邏輯和跨功能互動
+3. 用 4T 欄位格式向使用者呈現建議的 charter
+4. **使用者決定是否執行和何時執行** — 只建議，不強制
+
+### ET session 完成後
+
+1. 為發現的缺陷建 Issue，**手動加上** `discovery-method:et-session` label（Issue 模板的下拉選單僅記錄在 body 中，不會自動建立 label）
+2. 若 session 發現了新的可 grep 化 pattern，評估是否符合推廣標準後加入搜查手冊：
+   - 可用 regex 表達？
+   - False positive < 20%？
+   - 跨專案（同技術棧）有用？
+3. 建一個 Session 紀錄 Issue（標題如「ET Session: D-EDGE 業務邊界探索」），session report 作為 Issue body
+
+### 使用者不想要 ET
+
+如果使用者說「跳過 ET」、「只要 grep」、「不需要探索式測試」，尊重這個選擇。只執行搜查手冊的 grep 搜查，不建議 ET session。
+
+> **觀察指標：** 如果品質系統使用 30 天後沒有任何 Issue 帶有 `discovery-method:et-session` label，ET 框架可能需要重新設計或者使用者不需要這個功能。用 `gh issue list --label "discovery-method:et-session"` 檢查。
+
 ---
 
 ## 行為準則

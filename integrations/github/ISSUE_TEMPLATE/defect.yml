@@ -69,6 +69,19 @@ body:
         - "Integration Test"
         - "E2E Test"
         - "Production"
+  - type: dropdown
+    id: discovery-method
+    attributes:
+      label: "發現方式"
+      description: "如何發現此問題？使用品質系統的搜查或 ET 流程時填寫，否則留空。"
+      options:
+        - ""
+        - "taxonomy-sweep — 搜查手冊掃查"
+        - "et-session — 探索式測試"
+        - "code-review — Code review"
+        - "production — 生產環境"
+    validations:
+      required: false
   - type: input
     id: defect-category
     attributes:
