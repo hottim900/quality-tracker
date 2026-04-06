@@ -91,6 +91,26 @@ grep -rn "console\." . --include="*.ts" --include="*.tsx" | grep -v node_modules
 
 **搜查狀態：** 待搜查
 
+### What grep can't find (Charter seed)
+
+D-SILENT 的 grep pattern 能偵測 bare catch、缺少 status 檢查、console.* 誤用。它們**搜不到**：
+
+- **錯誤語意是否正確：** catch 裡有 throw，但 throw 的錯誤訊息是否讓上層能做正確的決策？例如：API 回傳 `"Something went wrong"` vs 回傳具體的 error code + context
+- **錯誤傳遞鏈斷裂：** 錯誤從 service → controller → frontend 的過程中，有沒有被不當轉換？例如：原始錯誤是 `UNIQUE_VIOLATION` 但使用者看到 `Internal Server Error`
+- **靜默成功的假象：** 操作部分失敗但回傳成功。例如：批次匯入 100 筆，3 筆格式錯誤被跳過但 response 說「匯入完成」
+- **非同步錯誤遺失：** background job、queue worker、webhook handler 的失敗沒有通知機制
+
+Suggested Charter:
+```
+Target: 錯誤傳遞鏈 — 從 service 層到使用者面前
+Task: 故意觸發每種已知錯誤類型（驗證失敗、權限不足、
+  資源不存在、並發衝突），追蹤錯誤訊息從產生到顯示的
+  完整路徑，檢查使用者是否得到足夠的資訊做出下一步動作
+Timebox: 30 min
+Trigger: D-SILENT 搜查完成，grep 已覆蓋 catch 結構
+  但錯誤語意和傳遞鏈未驗證
+```
+
 ### 搜查結果
 
 （依[記錄格式](#搜查結果記錄格式)填寫：範圍與命中數 → 發現 → Low-risk → 判定合理）
@@ -237,6 +257,25 @@ grep -rn "\.findMany\|\.all(" . --include="*.ts" | grep -v "limit\|take\|LIMIT"
 ```
 
 **搜查狀態：** 待搜查
+
+### What grep can't find (Charter seed)
+
+D-EDGE 的 grep pattern 能偵測缺少 max/min 限制的 schema 欄位、分頁參數、無上限查詢。它們**搜不到**：
+
+- **業務規則邊界：** 使用者封存最後一個分類時該怎麼辦？早鳥優惠的截止日期落在閏年 2/29 時？折扣百分比設為 0% 或 100% 時的行為？
+- **跨功能資源競爭：** 匯出操作和大量匯入同時進行時會怎樣？兩個並發編輯在 timebox 邊界撞在一起？
+- **隱含的數量假設：** UI 設計假設清單有 ~50 筆，但第 1000 筆時分頁、排序、渲染是否正常？搜尋結果為 0 筆時的空狀態處理？
+- **時間邊界：** 跨時區操作（使用者在 UTC+8 建立的項目，在 UTC-5 看到的日期）、午夜邊界的 cron job、DST 切換時的排程
+
+Suggested Charter:
+```
+Target: 業務規則邊界條件 — 「最後一個」和「第一個」的邊界
+Task: 探索刪除/封存最後一個 entity、並發操作共享資源、
+  隱含數量假設（空集合、超大集合、剛好到限制的集合）
+Timebox: 30 min
+Trigger: D-EDGE 搜查完成，grep 已覆蓋 schema 限制
+  但業務規則邊界未測試
+```
 
 ### 搜查結果
 
