@@ -73,7 +73,7 @@
     └── 是 → 系統性問題，用 ET 探索根因
 ```
 
-完整的 5 個 ET 觸發信號和操作流程見 [SKILL.md](../.claude/skills/quality/SKILL.md)。
+完整的 5 個 ET 觸發信號和操作流程見 `/quality` skill（SKILL.md）。
 
 ---
 

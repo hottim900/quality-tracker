@@ -411,6 +411,20 @@ grep -rn "pattern" . --include="\*.ts"
 
 **搜查狀態：** 待搜查
 
+### What grep can't find (Charter seed)
+
+描述此類別的 grep pattern 搜不到的具體問題：
+業務規則、跨功能互動、隱含假設等需要人類判斷的盲區。
+格式參考現有 D-XXX 類別的 charter seed。
+
+Suggested Charter:
+\`\`\`
+Target: [探索目標]
+Task: [具體要做什麼]
+Timebox: 30 min
+Trigger: [什麼原因觸發這次 ET]
+\`\`\`
+
 ### 搜查結果
 
 （依[記錄格式](#搜查結果記錄格式)填寫：範圍與命中數 → 發現 → Low-risk → 判定合理）

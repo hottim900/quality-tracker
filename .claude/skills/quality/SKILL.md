@@ -119,7 +119,7 @@ gh issue list --label "status:blocked-by-decision" --state open
 
 ### ET session 完成後
 
-1. 為發現的缺陷建 Issue，加上 `discovery-method:et-session` label
+1. 為發現的缺陷建 Issue，**手動加上** `discovery-method:et-session` label（Issue 模板的下拉選單僅記錄在 body 中，不會自動建立 label）
 2. 若 session 發現了新的可 grep 化 pattern，評估是否符合推廣標準後加入搜查手冊：
    - 可用 regex 表達？
    - False positive < 20%？

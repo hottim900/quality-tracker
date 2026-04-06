@@ -1,7 +1,7 @@
 # Sparkle ET Charters — 探索式測試執行範例
 
-> **用途：** 展示一次完整的 ET session 執行，從 charter 生成到結果記錄。
-> 這個範例是自包含的，不需要 Sparkle 的原始碼就能理解方法論。
+> **用途：** 展示 ET session 的結構和內容深度，從 charter 生成到結果記錄。
+> 這是一份**示範範例**，基於 Sparkle 的真實架構撰寫，但 session 本身是推演而非實際執行。
 > 你的專案應依照此結構執行自己的第一份 charter。
 
 **專案背景：** Sparkle 是一個自架式的 PKM (Personal Knowledge Management) 前端，用 TypeScript/Bun 開發。功能包括筆記的 CRUD、分類管理、標籤系統、匯入匯出、分享連結。後端是 Hono + SQLite，前端是 React + TanStack Router。
