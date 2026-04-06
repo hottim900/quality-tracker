@@ -204,3 +204,12 @@ ET session 發現的缺陷用 `discovery-method:et-session` label 追蹤。
    ```
 2. 若有相依 Issue（Complements/Blocks）→ 檢查對方 Issue 是否需更新
 3. 若為 Defect 且在系統性搜查中發現 → 確認搜查結果已記錄於 [defect-taxonomy.md](./defect-taxonomy.md)
+
+---
+
+## See also
+
+- [discovery-strategy.md](./discovery-strategy.md) — 雙層品質發現模型
+- [et-charter-template.md](./et-charter-template.md) — 探索式測試 Charter 模板
+- [defect-taxonomy.md](./defect-taxonomy.md) — 缺陷分類學搜查手冊
+- [quality-system-design-notes.md](./quality-system-design-notes.md) — 設計筆記與方法論來源
