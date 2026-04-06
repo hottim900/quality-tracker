@@ -4,7 +4,7 @@
 
 追蹤四種品質項目：**Defect**（非預期 bug）、**Tech Debt**（有意識的妥協）、**Feature Gap**（功能缺口）、**Test Infrastructure**（測試覆蓋與工具建設），搭配系統性搜查手冊，讓 AI 能自主發現、記錄、修復品質問題。
 
-品質項目以 **GitHub Issues / GitLab Issues** 追蹤，透過結構化 label 管理 metadata。核心價值是 **搜查手冊（Defect Taxonomy）** — 可重複執行的 grep 搜查模式。
+品質項目以 **GitHub Issues / GitLab Issues** 追蹤，透過結構化 label 管理 metadata。核心價值是兩層品質發現機制：**搜查手冊（Defect Taxonomy）** 的 grep 搜查模式，加上**探索式測試（ET）** 引導人類探索 grep 搜不到的業務邊界和意圖判斷問題。
 
 ---
 
@@ -16,7 +16,7 @@ AI 輔助開發常見的品質問題：
 - **同類 bug 反覆出現** — 修了一個 bare catch，但不知道同類問題還有 12 處
 - **缺乏系統性搜查** — 靠肉眼或記憶找 bug，而非可重複執行的搜查指令
 
-本系統用 **搜查手冊（Defect Taxonomy）** 解決這些問題 — 定義缺陷類別 + 可執行的 grep 指令，讓你（和 AI）能系統性地掃描整個 codebase。
+本系統用**雙層發現機制**解決這些問題：搜查手冊定義缺陷類別 + 可執行的 grep 指令，探索式測試（ET）用輕量 charter 引導人類探索 grep 無法覆蓋的問題。兩者互饋：ET 發現的新 pattern 可加入搜查手冊，搜查手冊的盲區產生 ET 探索目標。
 
 ---
 
@@ -71,7 +71,9 @@ QUALITY_DIR=/你的品質系統絕對路徑/quality
 ```
 quality/
 ├── README.md                      ← 系統參考：分類定義、Label 參考、查詢指引
-├── defect-taxonomy.md             ← 搜查手冊：6 個缺陷類別 + 擴充指引
+├── defect-taxonomy.md             ← 搜查手冊：6 個缺陷類別 + charter seed + 擴充指引
+├── discovery-strategy.md          ← 雙層發現模型：grep 搜查 + 探索式測試 (ET)
+├── et-charter-template.md         ← ET Charter 模板：4T 欄位 + Quick Start
 └── quality-system-design-notes.md ← 方法論：設計原則、取捨、AI 效率優化
 
 integrations/
@@ -86,8 +88,9 @@ integrations/
 | ------------- | ---------------------------------------------------------------------------- |
 | **系統參考**  | 分類決策樹、定義參考、Label 參考、完成步驟。                                |
 | **Issue 模板**| 四種 Issue 模板（Defect / Tech Debt / Feature Gap / Test Infrastructure），各有專屬 metadata 欄位。 |
-| **搜查手冊**  | 6 個內建缺陷類別，各附可執行的 grep 搜查指令。可自行擴充。                   |
-| **Skill**     | Claude Code 的操作指南，讓 AI 知道如何操作整個系統。                         |
+| **搜查手冊**  | 6 個內建缺陷類別，各附 grep 搜查指令和 ET charter seed。可自行擴充。         |
+| **ET 框架**   | 雙層發現策略、Charter 模板（4T 欄位）、互饋迴圈、pattern 推廣標準。          |
+| **Skill**     | Claude Code 的操作指南，讓 AI 知道如何操作整個系統（含 ET session 建議）。    |
 
 ---
 
@@ -145,7 +148,7 @@ integrations/
 
 ### 自定義搜查類別
 
-內建 6 個通用類別（D-SILENT、D-VALID、D-AUTH、D-TYPE、D-PERF、D-EDGE），可根據你的技術棧擴充。詳見搜查手冊底部的「[如何新增自定義類別](./quality/defect-taxonomy.md#如何新增自定義類別)」。
+內建 6 個通用類別（D-SILENT、D-VALID、D-AUTH、D-TYPE、D-PERF、D-EDGE），每個都附有 grep 搜查指令和 ET charter seed（grep 搜不到的盲區描述）。可根據你的技術棧擴充。詳見搜查手冊底部的「[如何新增自定義類別](./quality/defect-taxonomy.md#如何新增自定義類別)」。
 
 ### Hook 整合
 
@@ -169,7 +172,7 @@ integrations/
 
 不同技術棧的搜查手冊範例，展示如何將通用方法論適配到具體專案：
 
-- [`examples/sparkle/`](./examples/sparkle/) — **TypeScript / Bun / SQLite**（Sparkle PKM）：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。
+- [`examples/sparkle/`](./examples/sparkle/) — **TypeScript / Bun / SQLite**（Sparkle PKM）：3 輪系統性搜查、38 項追蹤、12 類缺陷分類。含 [ET charter 執行範例](./examples/sparkle/et-charters.md)。
 - [`examples/dotnet/`](./examples/dotnet/) — **.NET Clean Architecture + EF Core + React**：13 個缺陷類別，涵蓋 EF Core 配置、異常語意、授權 IDOR、前端 cache invalidation 等 .NET 專案常見問題。
 
 > 上述範例使用舊的 `[DEF-NNN](path)` 檔案連結格式。Issue-native 模式下改用 `#N`（collocated）或 `owner/repo#N`（companion repo）格式。
