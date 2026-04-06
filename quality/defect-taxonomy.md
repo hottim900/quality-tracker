@@ -141,6 +141,26 @@ grep -rn "z\.array\|Joi\.array" . --include="*.ts" | grep -v "max\|min"
 
 **搜查狀態：** 待搜查
 
+### What grep can't find (Charter seed)
+
+D-VALID 的 grep pattern 能偵測缺少 max/min 的 schema 欄位和未覆蓋的 route handler。它們**搜不到**：
+
+- **業務語意驗證：** 欄位有格式檢查，但值在業務上合理嗎？例如：結束日期早於開始日期、折扣價高於原價、自己指派自己為審核者
+- **跨欄位依賴：** 欄位 A 的合法值取決於欄位 B 的值。例如：付款方式是「信用卡」時需要卡號，但選「銀行轉帳」時不需要
+- **狀態轉換驗證：** 某些欄位只在特定狀態下允許修改。例如：已發佈的文章不應允許修改 slug
+- **批次操作的驗證一致性：** 單筆 API 有完整驗證，批次 API 是否套用相同規則？
+
+Suggested Charter:
+```
+Target: API 輸入驗證 — 業務語意層面
+Task: 找出所有接受使用者輸入的端點，嘗試提交
+  格式正確但業務上不合理的值（日期矛盾、
+  自我引用、狀態不允許的修改）
+Timebox: 30 min
+Trigger: D-VALID 搜查完成，grep 已覆蓋 schema
+  格式但業務語意驗證未確認
+```
+
 ### 搜查結果
 
 （依[記錄格式](#搜查結果記錄格式)填寫：範圍與命中數 → 發現 → Low-risk → 判定合理）
@@ -174,6 +194,26 @@ grep -rn "Content-Security-Policy" . --include="*.ts"
 
 **搜查狀態：** 待搜查
 
+### What grep can't find (Charter seed)
+
+D-AUTH 的 grep pattern 能偵測缺少 auth middleware 的路由、dangerouslySetInnerHTML、eval 使用。它們**搜不到**：
+
+- **授權邏輯正確性：** middleware 存在，但邏輯是否正確？例如：使用者 A 能否存取使用者 B 的資源？admin 權限是否能降級？角色變更後舊 session 是否仍有效？
+- **間接資訊洩漏：** API 不直接暴露機密，但回傳的錯誤訊息、response time、或 HTTP status code 差異能推測出隱藏資訊（例如：「使用者不存在」vs「密碼錯誤」的差異）
+- **權限邊界的組合爆炸：** 兩個單獨合法的操作，組合起來可能繞過權限。例如：修改自己的 email + 重設密碼 = 接管另一個帳號
+- **CSP/CORS 的實際效果：** header 設定存在，但是否真正防護了目標攻擊向量？
+
+Suggested Charter:
+```
+Target: 授權邊界 — 使用者 A 能存取使用者 B 的資源嗎？
+Task: 以不同角色登入，嘗試跨使用者存取資源、
+  利用 API 直接呼叫繞過 UI 的權限檢查、
+  觀察錯誤訊息是否洩漏資訊
+Timebox: 30 min
+Trigger: D-AUTH 搜查完成，grep 已確認 middleware
+  存在但授權邏輯正確性未驗證
+```
+
 ### 搜查結果
 
 （依[記錄格式](#搜查結果記錄格式)填寫：範圍與命中數 → 發現 → Low-risk → 判定合理）
@@ -200,6 +240,26 @@ grep -rn "@ts-ignore\|@ts-expect-error" . --include="*.ts" --include="*.tsx"
 ```
 
 **搜查狀態：** 待搜查
+
+### What grep can't find (Charter seed)
+
+D-TYPE 的 grep pattern 能偵測 `as any`、不安全的型別斷言、`@ts-ignore`。它們**搜不到**：
+
+- **API 契約漂移：** 前後端的型別定義一致，但實際回傳的 JSON 結構在邊界條件下偏離型別。例如：陣列欄位在空時回傳 null 而非 `[]`，optional 欄位在某些路徑完全不存在（undefined vs null）
+- **序列化/反序列化的型別損失：** Date 物件變成 string、BigInt 變成 number、enum 變成 magic string。特別是跨 JSON boundary 時
+- **泛型約束不足：** 泛型函式接受的型別範圍太廣，在特定使用場景中缺少必要的 property check
+- **Runtime 型別與 compile-time 型別不一致：** TypeScript 說是 number，但 HTML input 回傳的是 string
+
+Suggested Charter:
+```
+Target: API 邊界的型別一致性
+Task: 在瀏覽器 DevTools 中觀察實際 API response，
+  比對前端型別定義，特別注意 null vs undefined、
+  空陣列 vs null、Date 序列化格式
+Timebox: 30 min
+Trigger: D-TYPE 搜查完成，grep 已覆蓋靜態型別問題
+  但 runtime 型別漂移未驗證
+```
 
 ### 搜查結果
 
@@ -230,6 +290,27 @@ grep -rn "for.*await\|\.map.*await\|forEach.*await" . --include="*.ts" -A 3
 ```
 
 **搜查狀態：** 待搜查
+
+### What grep can't find (Charter seed)
+
+D-PERF 的 grep pattern 能偵測缺少 LIMIT 的查詢、N+1 候選、缺少 memo 的元件。它們**搜不到**：
+
+- **使用者感知效能：** 技術指標正常但使用者體驗慢。例如：API 回應 200ms 但 UI 因為 re-render cascade 需要 2 秒才更新、loading spinner 閃爍（太快結束反而造成視覺干擾）
+- **資料量成長後的退化：** 10 筆時快、1000 筆時慢。grep 能找到缺少 LIMIT 的查詢，但找不到「有 LIMIT 但 limit 值太大」或「分頁有但第 100 頁的效能」
+- **快取失效策略：** 快取存在但失效頻率太高（每次 mutation 都 invalidate all），或太低（使用者看到過期資料）
+- **Cold start vs warm path：** 首次載入、新使用者的體驗 vs 常規使用者的體驗差距
+
+Suggested Charter:
+```
+Target: 使用者感知效能 — 從點擊到結果顯示
+Task: 用 DevTools Performance tab 記錄常見操作
+  （列表載入、搜尋、建立、編輯）的實際時間，
+  觀察 re-render 次數和 network waterfall，
+  模擬大量資料（100+ 筆）的場景
+Timebox: 30 min
+Trigger: D-PERF 搜查完成，grep 已覆蓋查詢層效能
+  但使用者感知效能未測量
+```
 
 ### 搜查結果
 
@@ -287,6 +368,15 @@ Trigger: D-EDGE 搜查完成，grep 已覆蓋 schema 限制
 
 | 日期 | 類別 | 命中數 | 發現/排除 | 備註 |
 | ---- | ---- | ------ | --------- | ---- |
+
+---
+
+## See also
+
+- [discovery-strategy.md](./discovery-strategy.md) — 雙層模型：搜查手冊（本文件）與 ET 如何互饋
+- [et-charter-template.md](./et-charter-template.md) — Charter 模板與 Quick Start
+- [README.md](./README.md) — 品質管理追蹤總覽
+- [examples/sparkle/et-charters.md](../examples/sparkle/et-charters.md) — 真實 ET 執行範例
 
 ---
 

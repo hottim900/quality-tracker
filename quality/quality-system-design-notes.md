@@ -105,3 +105,18 @@ SKILL.md 明確列出完成步驟（關閉 Issue + 填寫完成 comment + 檢查
 | [Shift-Left Testing](https://www.sonarsource.com/resources/library/shift-left/)                                                                    | 搜查手冊 → 自動化防線的演進路徑                          |
 | [Escaped Defect Analysis](https://softwareengineeringauthority.com/index.php/tools/13-software-engineering-disciplines/14-escaped-defect-analysis) | 逃逸階段欄位設計                                         |
 | [Martin Fowler Tech Debt Quadrant](https://en.wikipedia.org/wiki/Technical_debt)                                                                   | Deliberate vs Inadvertent → 決策樹的「有意識的妥協」分支 |
+| [Cem Kaner — Exploratory Testing](https://en.wikipedia.org/wiki/Exploratory_testing) (1984)                                                        | ET 定義：同時設計、執行測試並從中學習；末端問題分類 |
+| [James Bach — Session-Based Test Management](https://www.satisfice.com/sbtm/)                                                                      | SBTM：charter + session + debrief 結構 → 4T 欄位模板 |
+| [Context-Driven School of Testing](https://context-driven-testing.com/)                                                                            | 測試方法隨情境調整 → 搜查手冊與 ET 互補的雙層模型 |
+
+---
+
+## 5. 雙層品質發現模型
+
+品質發現分為 AI 執行層（搜查手冊 grep）與人類判斷層（探索式測試 ET）。
+
+- **AI 執行層：** 系統性掃查已知缺陷模式，可自動化、可重複。搜查手冊（defect-taxonomy.md）是這一層的操作手冊。
+- **人類判斷層：** 處理 grep 搜不到的問題：業務邊界條件、意圖判斷、生產環境獨特性。探索式測試（ET）透過 charter 結構化地引導人類探索這些盲區。
+- **互饋迴圈：** ET 發現的新 pattern 可推廣為 grep pattern（需通過三項標準），搜查手冊的「盲區」（charter seed）產生 ET 探索目標。
+
+完整方法論見 [discovery-strategy.md](./discovery-strategy.md)。
